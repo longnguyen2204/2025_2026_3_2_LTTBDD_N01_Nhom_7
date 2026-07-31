@@ -7,6 +7,7 @@ import 'providers/deck_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/quiz_provider.dart';
 import 'providers/study_provider.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   runApp(const FlashcardApp());
@@ -30,10 +31,7 @@ class FlashcardApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             onGenerateTitle: (context) =>
                 AppLocalizations.of(context)!.appTitle,
-            theme: ThemeData(
-              colorSchemeSeed: Colors.indigo,
-              useMaterial3: true,
-            ),
+            theme: AppTheme.light,
             locale: localeProvider.currentLocale,
             supportedLocales: LocaleProvider.supportedLocales,
             localizationsDelegates: const [
