@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../models/word.dart';
 import '../providers/deck_provider.dart';
+import '../providers/study_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/word_form.dart';
+import 'study_screen.dart';
 
 /// Chiều rộng tối đa của nội dung, căn giữa trên màn hình rộng.
 const double _maxContentWidth = 600;
@@ -40,8 +42,11 @@ class DeckDetailScreen extends StatelessWidget {
     final color = AppTheme.deckColorAt(colorIndex);
 
     return Scaffold(
-      body: Consumer<DeckProvider>(
-        builder: (context, deckProvider, _) {
+      // Lắng nghe cả StudyProvider vì toggleLearned() sửa trạng thái đã thuộc
+      // của Word mà không thông báo qua DeckProvider — thiếu nó thì phần
+      // tiến độ ở đầu màn hình không cập nhật sau khi học xong.
+      body: Consumer2<DeckProvider, StudyProvider>(
+        builder: (context, deckProvider, studyProvider, _) {
           final deck = deckProvider.getDeckById(deckId);
 
           // Bộ từ vừa bị xóa ở màn hình khác.
@@ -66,7 +71,6 @@ class DeckDetailScreen extends StatelessWidget {
                     color: color,
                     total: total,
                     learned: learned,
-                    progress: deckProvider.deckProgress(deckId),
                   ),
                   SliverToBoxAdapter(
                     child: Padding(
@@ -76,7 +80,12 @@ class DeckDetailScreen extends StatelessWidget {
                         side,
                         AppTheme.spacingS,
                       ),
-                      child: _ActionButtons(color: color, wordCount: total),
+                      child: _ActionButtons(
+                        color: color,
+                        wordCount: total,
+                        deckId: deckId,
+                        colorIndex: colorIndex,
+                      ),
                     ),
                   ),
                   if (words.isEmpty)
@@ -212,18 +221,19 @@ class _DeckHeader extends StatelessWidget {
     required this.color,
     required this.total,
     required this.learned,
-    required this.progress,
   });
 
   final String name;
   final Color color;
   final int total;
   final int learned;
-  final double progress;
 
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    // Dòng chữ và thanh tiến độ cùng tính từ một cặp learned/total
+    // nên không thể lệch nhau.
+    final progress = total == 0 ? 0.0 : learned / total;
 
     return SliverAppBar(
       pinned: true,
@@ -310,10 +320,17 @@ class _DeckHeader extends StatelessWidget {
 
 /// Hai nút hành động chính: Học và Kiểm tra.
 class _ActionButtons extends StatelessWidget {
-  const _ActionButtons({required this.color, required this.wordCount});
+  const _ActionButtons({
+    required this.color,
+    required this.wordCount,
+    required this.deckId,
+    required this.colorIndex,
+  });
 
   final Color color;
   final int wordCount;
+  final String deckId;
+  final int colorIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -330,10 +347,14 @@ class _ActionButtons extends StatelessWidget {
             Expanded(
               child: FilledButton.icon(
                 onPressed: canStudy
-                    ? () {
-                        // TODO: điều hướng sang StudyScreen khi màn hình này
-                        // được thành viên phụ trách hoàn tất.
-                      }
+                    ? () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => StudyScreen(
+                            deckId: deckId,
+                            colorIndex: colorIndex,
+                          ),
+                        ),
+                      )
                     : null,
                 style: FilledButton.styleFrom(backgroundColor: color),
                 icon: const Icon(Icons.school_rounded),

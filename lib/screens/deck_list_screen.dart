@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../models/deck.dart';
 import '../providers/deck_provider.dart';
+import '../providers/study_provider.dart';
 import '../theme/app_theme.dart';
 import 'deck_detail_screen.dart';
 
@@ -47,8 +48,11 @@ class DeckListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<DeckProvider>(
-        builder: (context, deckProvider, _) {
+      // Lắng nghe cả StudyProvider vì toggleLearned() sửa trạng thái đã thuộc
+      // của Word mà không thông báo qua DeckProvider — thiếu nó thì tiến độ
+      // trên các thẻ không cập nhật sau khi học xong.
+      body: Consumer2<DeckProvider, StudyProvider>(
+        builder: (context, deckProvider, studyProvider, _) {
           final decks = deckProvider.getDecks();
 
           if (decks.isEmpty) {
@@ -74,7 +78,6 @@ class DeckListScreen extends StatelessWidget {
                   child: _DeckCard(
                     deck: deck,
                     color: AppTheme.deckColorAt(index),
-                    progress: deckProvider.deckProgress(deck.id),
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => DeckDetailScreen(
@@ -244,7 +247,6 @@ class _DeckCard extends StatelessWidget {
   const _DeckCard({
     required this.deck,
     required this.color,
-    required this.progress,
     required this.onTap,
     required this.onEdit,
     required this.onDelete,
@@ -252,7 +254,6 @@ class _DeckCard extends StatelessWidget {
 
   final Deck deck;
   final Color color;
-  final double progress;
   final VoidCallback onTap;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -263,6 +264,9 @@ class _DeckCard extends StatelessWidget {
     final theme = Theme.of(context);
     final total = deck.wordCount();
     final learned = deck.learnedCount();
+    // Dòng chữ và thanh tiến độ cùng tính từ một cặp learned/total
+    // nên không thể lệch nhau.
+    final progress = total == 0 ? 0.0 : learned / total;
 
     return DecoratedBox(
       // Bóng nhẹ để thẻ nổi khỏi nền mà không bị nặng nề.
