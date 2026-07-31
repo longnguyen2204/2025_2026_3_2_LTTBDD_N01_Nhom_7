@@ -133,7 +133,12 @@ class DeckProvider extends ChangeNotifier {
       ['computer', 'máy tính', '/kəmˈpjuːtər/', 'I use a computer every day.'],
       ['software', 'phần mềm', '/ˈsɔːftwer/', 'This software is free.'],
       ['network', 'mạng lưới', '/ˈnetwɜːrk/', 'The network is very slow.'],
-      ['database', 'cơ sở dữ liệu', '/ˈdeɪtəbeɪs/', 'The data is in a database.'],
+      [
+        'database',
+        'cơ sở dữ liệu',
+        '/ˈdeɪtəbeɪs/',
+        'The data is in a database.',
+      ],
       ['password', 'mật khẩu', '/ˈpæswɜːrd/', 'Do not share your password.'],
       ['device', 'thiết bị', '/dɪˈvaɪs/', 'This device works well.'],
     ]);
