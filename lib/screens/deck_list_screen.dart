@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../models/deck.dart';
 import '../providers/deck_provider.dart';
 import '../theme/app_theme.dart';
+import 'deck_detail_screen.dart';
 
 /// Chiều rộng tối đa của nội dung — trên màn hình rộng (tablet, web)
 /// danh sách nằm giữa thay vì kéo giãn hết cỡ.
@@ -74,10 +75,14 @@ class DeckListScreen extends StatelessWidget {
                     deck: deck,
                     color: AppTheme.deckColorAt(index),
                     progress: deckProvider.deckProgress(deck.id),
-                    onTap: () {
-                      // TODO: điều hướng sang DeckDetailScreen khi màn hình này
-                      // được thành viên phụ trách hoàn tất.
-                    },
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => DeckDetailScreen(
+                          deckId: deck.id,
+                          colorIndex: index,
+                        ),
+                      ),
+                    ),
                     onEdit: () => _onEditDeck(context, deck),
                     onDelete: () => _onDeleteDeck(context, deck),
                   ),
