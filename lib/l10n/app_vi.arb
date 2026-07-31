@@ -1,0 +1,18 @@
+{
+  "@@locale": "vi",
+  "appTitle": "Học từ vựng Flashcard",
+  "decks": "Bộ từ vựng",
+  "study": "Học",
+  "quiz": "Kiểm tra",
+  "statistics": "Thống kê",
+  "settings": "Cài đặt",
+  "about": "Giới thiệu",
+  "language": "Ngôn ngữ",
+  "vietnamese": "Tiếng Việt",
+  "english": "Tiếng Anh",
+  "save": "Lưu",
+  "cancel": "Hủy",
+  "delete": "Xóa",
+  "edit": "Sửa",
+  "add": "Thêm"
+}

@@ -1,16 +1,25 @@
-# flashcard
+# Ứng dụng học từ vựng Anh – Việt bằng Flashcard
 
-A new Flutter project.
+Bài tập lớn môn Lập trình cho thiết bị di động — Phenikaa University
 
-## Getting Started
+## Thông tin nhóm
+**Nhóm:** 7
+**Lớp:** N01
+**Giảng viên hướng dẫn:** [Nguyễn Xuân Quế]
 
-This project is a starting point for a Flutter application.
+| Họ tên | MSSV |
+|---|---|
+| Nguyễn Trần Đình Long | 24100035 |
+| Đặng Thế Đô | 24100088 |
 
-A few resources to get you started if this is your first Flutter project:
+## Công nghệ sử dụng
+- Flutter + Dart
+- State management: Provider (ChangeNotifier)
+- Đa ngôn ngữ: flutter_localizations + intl (Anh – Việt)
+- Dữ liệu: lưu tạm trong bộ nhớ (in-memory)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Cách chạy ứng dụng
+```bash
+flutter pub get
+flutter run
+```

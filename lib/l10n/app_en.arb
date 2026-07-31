@@ -1,0 +1,18 @@
+{
+  "@@locale": "en",
+  "appTitle": "Flashcard Vocabulary",
+  "decks": "Decks",
+  "study": "Study",
+  "quiz": "Quiz",
+  "statistics": "Statistics",
+  "settings": "Settings",
+  "about": "About",
+  "language": "Language",
+  "vietnamese": "Vietnamese",
+  "english": "English",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "add": "Add"
+}
