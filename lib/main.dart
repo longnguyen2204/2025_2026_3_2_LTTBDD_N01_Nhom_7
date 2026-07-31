@@ -7,6 +7,7 @@ import 'providers/deck_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/quiz_provider.dart';
 import 'providers/study_provider.dart';
+import 'screens/deck_list_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -40,25 +41,10 @@ class FlashcardApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            home: const _PlaceholderHome(),
+            home: const DeckListScreen(),
           );
         },
       ),
-    );
-  }
-}
-
-/// Màn hình tạm thời — sẽ được thay bằng DeckListScreen
-/// khi module Deck hoàn tất.
-class _PlaceholderHome extends StatelessWidget {
-  const _PlaceholderHome();
-
-  @override
-  Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(title: Text(t.appTitle)),
-      body: Center(child: Text('${t.decks} — ${t.study} — ${t.quiz}')),
     );
   }
 }
