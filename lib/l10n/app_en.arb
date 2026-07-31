@@ -1,18 +1,145 @@
 {
   "@@locale": "en",
+
   "appTitle": "Flashcard Vocabulary",
+
   "decks": "Decks",
   "study": "Study",
   "quiz": "Quiz",
   "statistics": "Statistics",
   "settings": "Settings",
   "about": "About",
-  "language": "Language",
-  "vietnamese": "Vietnamese",
-  "english": "English",
+
   "save": "Save",
   "cancel": "Cancel",
   "delete": "Delete",
   "edit": "Edit",
-  "add": "Add"
+  "add": "Add",
+  "close": "Close",
+  "confirm": "Confirm",
+  "back": "Back",
+  "finish": "Finish",
+
+  "language": "Language",
+  "vietnamese": "Vietnamese",
+  "english": "English",
+
+  "deckListTitle": "My Decks",
+  "emptyDeckList": "No decks yet.\nTap + to create your first deck.",
+  "createDeck": "Create new deck",
+  "editDeck": "Rename deck",
+  "deckName": "Deck name",
+  "deckNameHint": "For example: Daily conversation",
+  "deckNameEmpty": "Deck name cannot be empty",
+  "deleteDeckTitle": "Delete deck",
+  "deleteDeckMessage": "Are you sure you want to delete \"{name}\" and all of its words?",
+  "@deleteDeckMessage": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "deckCreated": "Deck created",
+  "deckUpdated": "Deck updated",
+  "deckDeleted": "Deck deleted",
+  "wordCountLabel": "{count} words",
+  "@wordCountLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "learnedProgress": "Learned {learned}/{total}",
+  "@learnedProgress": {
+    "placeholders": {
+      "learned": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "wordListTitle": "Word list",
+  "emptyWordList": "This deck has no words yet.\nTap + to add your first word.",
+  "addWord": "Add new word",
+  "editWord": "Edit word",
+  "wordTerm": "English word",
+  "wordMeaning": "Vietnamese meaning",
+  "wordPhonetic": "Phonetic (optional)",
+  "wordExample": "Example sentence (optional)",
+  "wordTermEmpty": "Please enter the English word",
+  "wordMeaningEmpty": "Please enter the Vietnamese meaning",
+  "deleteWordTitle": "Delete word",
+  "deleteWordMessage": "Are you sure you want to delete \"{term}\"?",
+  "@deleteWordMessage": {
+    "placeholders": {
+      "term": { "type": "String" }
+    }
+  },
+  "wordAdded": "Word added",
+  "wordUpdated": "Word updated",
+  "wordDeleted": "Word deleted",
+
+  "studyTitle": "Flashcard study",
+  "emptyDeckForStudy": "This deck has no words. Please add words before studying.",
+  "tapToFlip": "Tap the card to see its meaning",
+  "swipeHint": "Swipe left or right to change cards",
+  "markLearned": "Mark as learned",
+  "markNotLearned": "Mark as not learned",
+  "learned": "Learned",
+  "notLearned": "Not learned",
+  "cardPosition": "{current}/{total}",
+  "@cardPosition": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "studyFinished": "You have finished this deck!",
+
+  "quizTitle": "Quiz",
+  "notEnoughWords": "A deck needs at least 4 words to create a quiz",
+  "questionPosition": "Question {current}/{total}",
+  "@questionPosition": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "questionPrompt": "Choose the correct meaning of the word:",
+  "nextQuestion": "Next question",
+  "submitQuiz": "Submit",
+  "selectAnswerFirst": "Please select an answer",
+
+  "quizResultTitle": "Quiz result",
+  "yourScore": "Your score",
+  "correctCount": "{correct}/{total} correct",
+  "@correctCount": {
+    "placeholders": {
+      "correct": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "reviewAnswers": "Review answers",
+  "yourAnswer": "Your answer:",
+  "correctAnswer": "Correct answer:",
+  "notAnswered": "Not answered",
+  "retakeQuiz": "Retake",
+  "backToDeck": "Back to deck",
+
+  "statisticsTitle": "Learning progress",
+  "totalDecks": "Total decks",
+  "totalWords": "Total words",
+  "totalLearned": "Words learned",
+  "overallProgress": "Overall progress",
+  "progressByDeck": "Progress by deck",
+  "emptyStatistics": "No data to display yet",
+
+  "settingsTitle": "Settings",
+  "interfaceLanguage": "Interface language",
+
+  "aboutTitle": "Group information",
+  "projectName": "English – Vietnamese Flashcard Vocabulary App",
+  "subjectName": "Mobile Device Programming",
+  "universityName": "Phenikaa University",
+  "groupLabel": "Group 7 – Class N01",
+  "instructorLabel": "Instructor",
+  "membersLabel": "Group members",
+  "instructorName": "Nguyen Xuan Que"
 }
