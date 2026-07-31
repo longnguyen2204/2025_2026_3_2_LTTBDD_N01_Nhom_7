@@ -7,6 +7,7 @@ import '../l10n/app_localizations.dart';
 import '../models/word.dart';
 import '../providers/deck_provider.dart';
 import '../theme/app_theme.dart';
+import '../widgets/word_form.dart';
 
 /// Chiều rộng tối đa của nội dung, căn giữa trên màn hình rộng.
 const double _maxContentWidth = 600;
@@ -104,10 +105,7 @@ class DeckDetailScreen extends StatelessWidget {
                               word: word,
                               color: color,
                               onTap: () => _showWordDetail(context, word),
-                              onEdit: () {
-                                // TODO: mở WordForm để sửa từ khi widget này
-                                // được thành viên phụ trách hoàn tất.
-                              },
+                              onEdit: () => _onEditWord(context, word),
                               onDelete: () => _onDeleteWord(context, word),
                               confirmDelete: () =>
                                   _confirmDeleteWord(context, word),
@@ -124,15 +122,33 @@ class DeckDetailScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: t.addWord,
-        onPressed: () {
-          // TODO: mở WordForm để thêm từ mới khi widget này được hoàn tất.
-        },
+        onPressed: () => _onAddWord(context),
         child: const Icon(Icons.add),
       ),
     );
   }
 
   // ---------- Các hành động trên từ vựng ----------
+
+  /// Mở biểu mẫu thêm từ mới rồi lưu vào bộ từ hiện tại.
+  Future<void> _onAddWord(BuildContext context) async {
+    final t = AppLocalizations.of(context)!;
+    final word = await WordForm.show(context);
+    if (word == null || !context.mounted) return;
+
+    context.read<DeckProvider>().addWord(deckId, word);
+    _showSnackBar(context, t.wordAdded);
+  }
+
+  /// Mở biểu mẫu sửa từ với dữ liệu hiện có rồi cập nhật lại.
+  Future<void> _onEditWord(BuildContext context, Word word) async {
+    final t = AppLocalizations.of(context)!;
+    final updated = await WordForm.show(context, initialWord: word);
+    if (updated == null || !context.mounted) return;
+
+    context.read<DeckProvider>().updateWord(deckId, updated);
+    _showSnackBar(context, t.wordUpdated);
+  }
 
   /// Hỏi xác nhận trước khi xóa. Trả về true nếu người dùng đồng ý.
   Future<bool> _confirmDeleteWord(BuildContext context, Word word) async {
@@ -165,9 +181,13 @@ class DeckDetailScreen extends StatelessWidget {
   void _onDeleteWord(BuildContext context, Word word) {
     final t = AppLocalizations.of(context)!;
     context.read<DeckProvider>().deleteWord(deckId, word.id);
+    _showSnackBar(context, t.wordDeleted);
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(t.wordDeleted)));
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   /// Mở BottomSheet xem chi tiết đầy đủ của một từ.
