@@ -53,10 +53,7 @@ class AppTheme {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: primary,
       brightness: Brightness.light,
-    ).copyWith(
-      secondary: secondary,
-      error: danger,
-    );
+    ).copyWith(secondary: secondary, error: danger);
 
     return ThemeData(
       useMaterial3: true,
@@ -67,10 +64,7 @@ class AppTheme {
         centerTitle: true,
         elevation: 0,
         scrolledUnderElevation: 2,
-        titleTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
+        titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
       ),
 
       cardTheme: CardThemeData(
@@ -88,10 +82,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusM),
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
 
@@ -142,9 +133,7 @@ class AppTheme {
 
       bottomSheetTheme: const BottomSheetThemeData(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(radiusL),
-          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(radiusL)),
         ),
       ),
 
@@ -172,10 +161,9 @@ class AppTheme {
       ),
 
       chipTheme: ChipThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(999),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
       ),
     );
   }
 }
+//aaaaaaaaaaaa
