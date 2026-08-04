@@ -298,7 +298,6 @@ class _DeckCard extends StatelessWidget {
         ],
       ),
       child: Card(
-        color: Colors.white,
         child: InkWell(
           onTap: onTap,
           splashColor: color.withValues(alpha: 0.12),
@@ -363,7 +362,9 @@ class _DeckCard extends StatelessWidget {
                             // Khi chưa thuộc từ nào, nền thanh nhạt hơn hẳn
                             // để không bị nhìn nhầm thành đã hoàn thành.
                             backgroundColor: progress == 0
-                                ? Colors.grey.withValues(alpha: 0.16)
+                                ? theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.12,
+                                  )
                                 : color.withValues(alpha: 0.16),
                             valueColor: AlwaysStoppedAnimation<Color>(color),
                           ),

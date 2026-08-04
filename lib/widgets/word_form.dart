@@ -21,7 +21,6 @@ class WordForm extends StatefulWidget {
     return showModalBottomSheet<Word>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
       constraints: const BoxConstraints(maxWidth: _maxFormWidth),
       builder: (sheetContext) => WordForm(initialWord: initialWord),
     );
@@ -92,7 +91,9 @@ class _WordFormState extends State<WordForm> {
 
     return Padding(
       // Đẩy nội dung lên khi bàn phím hiện ra.
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(
@@ -114,7 +115,7 @@ class _WordFormState extends State<WordForm> {
                     height: 4,
                     margin: const EdgeInsets.only(bottom: AppTheme.spacingM),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(999),
                     ),
                   ),

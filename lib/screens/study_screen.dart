@@ -106,7 +106,10 @@ class _StudyScreenState extends State<StudyScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [color.withValues(alpha: 0.18), AppTheme.background],
+            colors: [
+              color.withValues(alpha: 0.18),
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
           ),
         ),
         child: SafeArea(
@@ -207,13 +210,15 @@ class _StudyProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingL),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(999),
         child: LinearProgressIndicator(
           value: total == 0 ? 0 : current / total,
-          backgroundColor: Colors.white.withValues(alpha: 0.7),
+          backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.12),
           valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
       ),
@@ -270,7 +275,9 @@ class _StudyActionBar extends StatelessWidget {
     final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final isLearned = word.isLearned;
-    final markColor = isLearned ? AppTheme.success : Colors.grey.shade600;
+    final markColor = isLearned
+        ? AppTheme.success
+        : theme.colorScheme.onSurface.withValues(alpha: 0.6);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -287,7 +294,7 @@ class _StudyActionBar extends StatelessWidget {
               style: FilledButton.styleFrom(
                 backgroundColor: isLearned
                     ? AppTheme.success.withValues(alpha: 0.14)
-                    : Colors.white,
+                    : theme.colorScheme.surface,
                 foregroundColor: markColor,
                 elevation: 0,
                 side: BorderSide(color: markColor.withValues(alpha: 0.35)),
@@ -499,7 +506,7 @@ class _CardBack extends StatelessWidget {
 
     return _CardShell(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusL + 4),
         border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
         boxShadow: [
@@ -635,4 +642,5 @@ class _StudyMessage extends StatelessWidget {
     );
   }
 }
+
 //asasasasasasaas

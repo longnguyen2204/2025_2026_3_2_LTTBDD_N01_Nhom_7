@@ -311,7 +311,6 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
       constraints: const BoxConstraints(maxWidth: _maxContentWidth),
       builder: (sheetContext) => _WordDetailSheet(
         word: word,
@@ -726,7 +725,6 @@ class _WordTile extends StatelessWidget {
         child: const Icon(Icons.delete_outline, color: Colors.white),
       ),
       child: Card(
-        color: Colors.white,
         child: InkWell(
           onTap: onTap,
           onLongPress: onEdit,
@@ -825,7 +823,9 @@ class _LearnedIcon extends StatelessWidget {
       message: isLearned ? t.learned : t.notLearned,
       child: Icon(
         isLearned ? Icons.check_circle : Icons.radio_button_unchecked,
-        color: isLearned ? AppTheme.success : Colors.grey.shade400,
+        color: isLearned
+            ? AppTheme.success
+            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
       ),
     );
   }
@@ -849,7 +849,9 @@ class _FavoriteButton extends StatelessWidget {
       onPressed: onPressed,
       icon: Icon(
         isFavorite ? Icons.favorite : Icons.favorite_border,
-        color: isFavorite ? AppTheme.danger : Colors.grey.shade400,
+        color: isFavorite
+            ? AppTheme.danger
+            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
       ),
     );
   }
@@ -937,7 +939,7 @@ class _WordDetailSheet extends StatelessWidget {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: AppTheme.spacingM),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
@@ -1032,7 +1034,9 @@ class _LearnedBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final badgeColor = isLearned ? AppTheme.success : Colors.grey.shade500;
+    final badgeColor = isLearned
+        ? AppTheme.success
+        : theme.colorScheme.onSurface.withValues(alpha: 0.5);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
