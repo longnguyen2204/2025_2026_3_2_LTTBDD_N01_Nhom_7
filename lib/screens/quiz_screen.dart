@@ -328,7 +328,6 @@ class _QuizTypeCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card(
-      color: theme.colorScheme.surface,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppTheme.radiusM),
@@ -487,7 +486,9 @@ class _OptionTile extends StatelessWidget {
                 selected
                     ? Icons.radio_button_checked
                     : Icons.radio_button_unchecked,
-                color: selected ? color : Colors.grey.shade400,
+                color: selected
+                    ? color
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.4),
               ),
               const SizedBox(width: AppTheme.spacingM),
               Expanded(

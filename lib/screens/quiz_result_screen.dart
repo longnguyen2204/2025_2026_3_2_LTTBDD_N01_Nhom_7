@@ -213,7 +213,6 @@ class _AnswerCard extends StatelessWidget {
     final statusColor = correct ? AppTheme.success : AppTheme.danger;
 
     return Card(
-      color: theme.cardColor,
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacingM),
         child: Row(

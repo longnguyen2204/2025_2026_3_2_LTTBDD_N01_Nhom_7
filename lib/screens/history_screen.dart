@@ -111,7 +111,6 @@ class _HistoryTile extends StatelessWidget {
     final time = DateFormat('dd/MM/yyyy HH:mm').format(item.timestamp);
 
     return Card(
-      color: theme.cardColor,
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacingM),
         child: Row(

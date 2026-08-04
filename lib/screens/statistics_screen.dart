@@ -193,7 +193,6 @@ class _StatTile extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card(
-      color: theme.cardColor,
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacingM - 2),
         child: Column(
@@ -234,7 +233,9 @@ class _LearnedPieChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    final notLearnedColor = Colors.grey.shade300;
+    final notLearnedColor = Theme.of(
+      context,
+    ).colorScheme.onSurface.withValues(alpha: 0.2);
 
     return Card(
       child: Padding(
@@ -352,7 +353,6 @@ class _DeckProgressCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card(
-      color: theme.cardColor,
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacingM),
         child: Column(
