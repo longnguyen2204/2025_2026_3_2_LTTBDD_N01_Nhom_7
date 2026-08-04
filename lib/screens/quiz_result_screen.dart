@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
@@ -11,7 +12,7 @@ const double _maxContentWidth = 600;
 const Color _warningColor = Color(0xFFF59E0B);
 
 /// Màn hình kết quả sau khi nộp bài trắc nghiệm (FR10).
-class QuizResultScreen extends StatelessWidget {
+class QuizResultScreen extends StatefulWidget {
   const QuizResultScreen({
     super.key,
     required this.result,
@@ -24,9 +25,34 @@ class QuizResultScreen extends StatelessWidget {
   final int colorIndex;
 
   @override
+  State<QuizResultScreen> createState() => _QuizResultScreenState();
+}
+
+class _QuizResultScreenState extends State<QuizResultScreen> {
+  late final ConfettiController _confettiController;
+
+  @override
+  void initState() {
+    super.initState();
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 2),
+    );
+    if (widget.result.score() >= 0.8) {
+      _confettiController.play();
+    }
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final result = widget.result;
     final score = result.score();
     final scoreColor = score >= 0.8
         ? AppTheme.success
@@ -39,82 +65,102 @@ class QuizResultScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text(t.quizResultTitle),
       ),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: _maxContentWidth),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(AppTheme.spacingL),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _ScoreSummary(
-                    score: score,
-                    color: scoreColor,
-                    label: t.yourScore,
-                    detail: t.correctCount(
-                      result.correctAnswers,
-                      result.totalQuestions,
-                    ),
-                  ),
-                  const SizedBox(height: AppTheme.spacingL),
-                  Text(
-                    t.reviewAnswers,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: AppTheme.spacingS + 4),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: result.questions.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: AppTheme.spacingS + 4),
-                    itemBuilder: (context, index) {
-                      final question = result.questions[index];
-                      final answer = result.answerOf(question.id);
-
-                      return _AnswerCard(
-                        question: question,
-                        answer: answer,
-                        correct: _isAnswerCorrect(question, answer),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: AppTheme.spacingL),
-                  Row(
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(AppTheme.spacingL),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (_) => QuizScreen(
-                                deckId: deckId,
-                                colorIndex: colorIndex,
-                              ),
-                            ),
-                          ),
-                          child: Text(t.retakeQuiz),
+                      _ScoreSummary(
+                        score: score,
+                        color: scoreColor,
+                        label: t.yourScore,
+                        detail: t.correctCount(
+                          result.correctAnswers,
+                          result.totalQuestions,
                         ),
                       ),
-                      const SizedBox(width: AppTheme.spacingM),
-                      Expanded(
-                        child: FilledButton(
-                          // QuizScreen đã bị thay thế bởi màn hình này nên
-                          // pop một lần là về thẳng DeckDetailScreen.
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text(t.backToDeck),
+                      const SizedBox(height: AppTheme.spacingL),
+                      Text(
+                        t.reviewAnswers,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
                         ),
+                      ),
+                      const SizedBox(height: AppTheme.spacingS + 4),
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: result.questions.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: AppTheme.spacingS + 4),
+                        itemBuilder: (context, index) {
+                          final question = result.questions[index];
+                          final answer = result.answerOf(question.id);
+
+                          return _AnswerCard(
+                            question: question,
+                            answer: answer,
+                            correct: _isAnswerCorrect(question, answer),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppTheme.spacingL),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (_) => QuizScreen(
+                                    deckId: widget.deckId,
+                                    colorIndex: widget.colorIndex,
+                                  ),
+                                ),
+                              ),
+                              child: Text(t.retakeQuiz),
+                            ),
+                          ),
+                          const SizedBox(width: AppTheme.spacingM),
+                          Expanded(
+                            child: FilledButton(
+                              // QuizScreen đã bị thay thế bởi màn hình này nên
+                              // pop một lần là về thẳng DeckDetailScreen.
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text(t.backToDeck),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              numberOfParticles: 24,
+              maxBlastForce: 20,
+              minBlastForce: 8,
+              gravity: 0.3,
+              colors: const [
+                AppTheme.primary,
+                AppTheme.secondary,
+                AppTheme.success,
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -158,29 +204,36 @@ class _ScoreSummary extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppTheme.spacingM),
-        SizedBox(
-          width: 180,
-          height: 180,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox.expand(
-                child: CircularProgressIndicator(
-                  value: score,
-                  strokeWidth: 12,
-                  backgroundColor: color.withValues(alpha: 0.15),
-                  valueColor: AlwaysStoppedAnimation<Color>(color),
-                ),
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: score),
+          duration: const Duration(milliseconds: 1200),
+          curve: Curves.easeOutCubic,
+          builder: (context, animatedScore, child) {
+            return SizedBox(
+              width: 180,
+              height: 180,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox.expand(
+                    child: CircularProgressIndicator(
+                      value: animatedScore,
+                      strokeWidth: 12,
+                      backgroundColor: color.withValues(alpha: 0.15),
+                      valueColor: AlwaysStoppedAnimation<Color>(color),
+                    ),
+                  ),
+                  Text(
+                    '${(animatedScore * 100).round()}%',
+                    style: theme.textTheme.displaySmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: color,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                '${(score * 100).round()}%',
-                style: theme.textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: color,
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
         const SizedBox(height: AppTheme.spacingM),
         Text(
