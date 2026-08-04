@@ -3,10 +3,12 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 
 import '../models/deck.dart';
+import '../models/quiz_history.dart';
 import '../models/quiz_question.dart';
 import '../models/quiz_result.dart';
 import '../models/quiz_type.dart';
 import '../models/word.dart';
+import '../repositories/history_repository.dart';
 
 /// Quản lý một bài trắc nghiệm: sinh câu hỏi ngẫu nhiên từ bộ từ vựng,
 /// ghi nhận đáp án người dùng chọn và chấm điểm.
@@ -23,6 +25,9 @@ class QuizProvider extends ChangeNotifier {
   final Map<String, String> _userAnswers = {};
 
   final Random _random = Random();
+
+  final HistoryRepository _historyRepository = HistoryRepository();
+  List<QuizHistory> _history = [];
 
   List<QuizQuestion> get questions => List.unmodifiable(_questions);
   int get currentIndex => _currentIndex;
@@ -46,7 +51,7 @@ class QuizProvider extends ChangeNotifier {
 
   /// Sinh bài trắc nghiệm từ bộ từ vựng được chọn.
   /// Trả về true nếu tạo thành công, false nếu bộ từ không đủ số từ tối thiểu.
-  bool generateQuiz(Deck deck) {
+  bool generateQuiz(Deck deck, QuizType type) {
     if (deck.words.length < minWordsRequired) return false;
 
     _questions.clear();
@@ -62,9 +67,11 @@ class QuizProvider extends ChangeNotifier {
         QuizQuestion(
           id: 'q_${i + 1}',
           word: word,
-          options: _buildOptions(word, deck.words),
+          options: type == QuizType.multipleChoice
+              ? _buildOptions(word, deck.words)
+              : const [],
           correctAnswer: word.meaning,
-          type: QuizType.multipleChoice,
+          type: type,
         ),
       );
     }
@@ -101,6 +108,16 @@ class QuizProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool checkTypingAnswer(String questionId, String answer) {
+    submitAnswer(questionId, answer);
+    for (final question in _questions) {
+      if (question.id == questionId) {
+        return _isAnswerCorrect(question, answer);
+      }
+    }
+    return false;
+  }
+
   /// Còn câu hỏi tiếp theo hay không.
   bool hasNext() {
     return _currentIndex < _questions.length - 1;
@@ -122,12 +139,21 @@ class QuizProvider extends ChangeNotifier {
     }
   }
 
+  String _normalize(String text) => text.trim().toLowerCase();
+
+  bool _isAnswerCorrect(QuizQuestion question, String answer) {
+    if (question.type == QuizType.typing) {
+      return _normalize(answer) == _normalize(question.correctAnswer);
+    }
+    return question.isCorrect(answer);
+  }
+
   /// Chấm điểm và trả về kết quả bài trắc nghiệm.
   QuizResult calculateResult() {
     var correct = 0;
     for (final question in _questions) {
       final answer = _userAnswers[question.id];
-      if (answer != null && question.isCorrect(answer)) {
+      if (answer != null && _isAnswerCorrect(question, answer)) {
         correct++;
       }
     }
@@ -146,5 +172,36 @@ class QuizProvider extends ChangeNotifier {
     _userAnswers.clear();
     _currentIndex = 0;
     notifyListeners();
+  }
+
+  Future<void> loadHistory() async {
+    _history = await _historyRepository.loadHistory();
+    notifyListeners();
+  }
+
+  List<QuizHistory> getHistory() => List.unmodifiable(_history);
+
+  Future<void> saveResult(
+    String deckName,
+    QuizResult result,
+    QuizType type,
+  ) async {
+    final entry = QuizHistory(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      deckName: deckName,
+      score: result.correctAnswers,
+      totalQuestions: result.totalQuestions,
+      quizType: type,
+      timestamp: DateTime.now(),
+    );
+    _history = [entry, ..._history];
+    notifyListeners();
+    await _historyRepository.saveHistory(_history);
+  }
+
+  Future<void> clearHistory() async {
+    _history = [];
+    notifyListeners();
+    await _historyRepository.saveHistory(_history);
   }
 }
