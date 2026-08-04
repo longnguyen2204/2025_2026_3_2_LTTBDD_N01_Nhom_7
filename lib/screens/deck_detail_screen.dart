@@ -10,6 +10,7 @@ import '../providers/deck_provider.dart';
 import '../providers/study_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/word_form.dart';
+import 'quiz_screen.dart';
 import 'study_screen.dart';
 
 /// Chiều rộng tối đa của nội dung, căn giữa trên màn hình rộng.
@@ -471,10 +472,14 @@ class _ActionButtons extends StatelessWidget {
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: canQuiz
-                    ? () {
-                        // TODO: điều hướng sang QuizScreen khi màn hình này
-                        // được thành viên phụ trách hoàn tất.
-                      }
+                    ? () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => QuizScreen(
+                            deckId: deckId,
+                            colorIndex: colorIndex,
+                          ),
+                        ),
+                      )
                     : null,
                 style: OutlinedButton.styleFrom(
                   foregroundColor: color,

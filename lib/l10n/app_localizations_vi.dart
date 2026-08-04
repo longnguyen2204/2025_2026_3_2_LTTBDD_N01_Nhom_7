@@ -237,7 +237,43 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get chooseQuizType => 'Chọn hình thức làm bài';
+
+  @override
+  String get quizTypeMultipleChoice => 'Trắc nghiệm';
+
+  @override
+  String get quizTypeMultipleChoiceDesc => 'Chọn 1 trong 4 đáp án';
+
+  @override
+  String get quizTypeTyping => 'Điền từ';
+
+  @override
+  String get quizTypeTypingDesc => 'Gõ nghĩa tiếng Việt của từ';
+
+  @override
+  String get typingAnswerHint => 'Nhập nghĩa tiếng Việt...';
+
+  @override
+  String get checkAnswer => 'Kiểm tra';
+
+  @override
+  String get answerCorrect => 'Chính xác!';
+
+  @override
+  String get answerIncorrect => 'Chưa đúng';
+
+  @override
+  String get startQuiz => 'Bắt đầu';
+
+  @override
   String get questionPrompt => 'Chọn nghĩa đúng của từ:';
+
+  @override
+  String get typingPrompt => 'Nhập nghĩa tiếng Việt của từ:';
+
+  @override
+  String get checkAnswerFirst => 'Vui lòng bấm Kiểm tra trước khi tiếp tục';
 
   @override
   String get nextQuestion => 'Câu tiếp theo';

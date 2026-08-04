@@ -524,11 +524,83 @@ abstract class AppLocalizations {
   /// **'Câu {current}/{total}'**
   String questionPosition(int current, int total);
 
+  /// No description provided for @chooseQuizType.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn hình thức làm bài'**
+  String get chooseQuizType;
+
+  /// No description provided for @quizTypeMultipleChoice.
+  ///
+  /// In vi, this message translates to:
+  /// **'Trắc nghiệm'**
+  String get quizTypeMultipleChoice;
+
+  /// No description provided for @quizTypeMultipleChoiceDesc.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn 1 trong 4 đáp án'**
+  String get quizTypeMultipleChoiceDesc;
+
+  /// No description provided for @quizTypeTyping.
+  ///
+  /// In vi, this message translates to:
+  /// **'Điền từ'**
+  String get quizTypeTyping;
+
+  /// No description provided for @quizTypeTypingDesc.
+  ///
+  /// In vi, this message translates to:
+  /// **'Gõ nghĩa tiếng Việt của từ'**
+  String get quizTypeTypingDesc;
+
+  /// No description provided for @typingAnswerHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập nghĩa tiếng Việt...'**
+  String get typingAnswerHint;
+
+  /// No description provided for @checkAnswer.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra'**
+  String get checkAnswer;
+
+  /// No description provided for @answerCorrect.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chính xác!'**
+  String get answerCorrect;
+
+  /// No description provided for @answerIncorrect.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa đúng'**
+  String get answerIncorrect;
+
+  /// No description provided for @startQuiz.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bắt đầu'**
+  String get startQuiz;
+
   /// No description provided for @questionPrompt.
   ///
   /// In vi, this message translates to:
   /// **'Chọn nghĩa đúng của từ:'**
   String get questionPrompt;
+
+  /// No description provided for @typingPrompt.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập nghĩa tiếng Việt của từ:'**
+  String get typingPrompt;
+
+  /// No description provided for @checkAnswerFirst.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng bấm Kiểm tra trước khi tiếp tục'**
+  String get checkAnswerFirst;
 
   /// No description provided for @nextQuestion.
   ///

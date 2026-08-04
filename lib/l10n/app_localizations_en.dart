@@ -236,7 +236,43 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get chooseQuizType => 'Choose quiz type';
+
+  @override
+  String get quizTypeMultipleChoice => 'Multiple choice';
+
+  @override
+  String get quizTypeMultipleChoiceDesc => 'Pick 1 of 4 answers';
+
+  @override
+  String get quizTypeTyping => 'Typing';
+
+  @override
+  String get quizTypeTypingDesc => 'Type the Vietnamese meaning';
+
+  @override
+  String get typingAnswerHint => 'Type the meaning...';
+
+  @override
+  String get checkAnswer => 'Check';
+
+  @override
+  String get answerCorrect => 'Correct!';
+
+  @override
+  String get answerIncorrect => 'Not quite';
+
+  @override
+  String get startQuiz => 'Start';
+
+  @override
   String get questionPrompt => 'Choose the correct meaning of the word:';
+
+  @override
+  String get typingPrompt => 'Type the Vietnamese meaning of the word:';
+
+  @override
+  String get checkAnswerFirst => 'Please tap Check before continuing';
 
   @override
   String get nextQuestion => 'Next question';
