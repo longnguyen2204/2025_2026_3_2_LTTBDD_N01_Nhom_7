@@ -7,6 +7,7 @@ import 'providers/deck_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/quiz_provider.dart';
 import 'providers/study_provider.dart';
+import 'providers/theme_provider.dart';
 import 'screens/deck_list_screen.dart';
 import 'theme/app_theme.dart';
 
@@ -26,14 +27,19 @@ class FlashcardApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => StudyProvider()),
         ChangeNotifierProvider(create: (_) => QuizProvider()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()..loadTheme()),
       ],
-      child: Consumer<LocaleProvider>(
-        builder: (context, localeProvider, _) {
+      child: Consumer2<LocaleProvider, ThemeProvider>(
+        builder: (context, localeProvider, themeProvider, _) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             onGenerateTitle: (context) =>
                 AppLocalizations.of(context)!.appTitle,
             theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: themeProvider.isDarkMode
+                ? ThemeMode.dark
+                : ThemeMode.light,
             locale: localeProvider.currentLocale,
             supportedLocales: LocaleProvider.supportedLocales,
             localizationsDelegates: const [
