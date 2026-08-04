@@ -347,17 +347,20 @@ class _DeckCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Điểm nhấn thị giác mang màu của bộ từ.
-                            Container(
-                              width: 46,
-                              height: 46,
-                              decoration: BoxDecoration(
-                                color: color.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                              child: Icon(
-                                Icons.style_rounded,
-                                color: color,
-                                size: 24,
+                            Hero(
+                              tag: 'deck_icon_${deck.id}',
+                              child: Container(
+                                width: 46,
+                                height: 46,
+                                decoration: BoxDecoration(
+                                  color: color.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: Icon(
+                                  Icons.style_rounded,
+                                  color: color,
+                                  size: 24,
+                                ),
                               ),
                             ),
                             const SizedBox(width: AppTheme.spacingM),

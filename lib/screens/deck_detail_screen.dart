@@ -137,6 +137,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               return CustomScrollView(
                 slivers: [
                   _DeckHeader(
+                    deckId: widget.deckId,
                     name: deck.name,
                     color: color,
                     total: total,
@@ -323,12 +324,14 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
 /// Phần đầu màn hình: tên bộ từ trên nền gradient kèm tiến độ học.
 class _DeckHeader extends StatelessWidget {
   const _DeckHeader({
+    required this.deckId,
     required this.name,
     required this.color,
     required this.total,
     required this.learned,
   });
 
+  final String deckId;
   final String name;
   final Color color;
   final int total;
@@ -375,6 +378,23 @@ class _DeckHeader extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Hero(
+                    tag: 'deck_icon_$deckId',
+                    child: Container(
+                      width: 46,
+                      height: 46,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Icon(
+                        Icons.style_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppTheme.spacingM),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
