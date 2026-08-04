@@ -9,6 +9,7 @@ import '../providers/deck_provider.dart';
 import '../providers/quiz_provider.dart';
 import '../services/tts_service.dart';
 import '../theme/app_theme.dart';
+import 'quiz_result_screen.dart';
 
 const double _maxContentWidth = 600;
 
@@ -78,24 +79,14 @@ class _QuizScreenState extends State<QuizScreen> {
     await quizProvider.saveResult(deck.name, result, _quizType!);
     if (!mounted) return;
 
-    // TODO: thay bằng điều hướng sang QuizResultScreen.
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        content: Text(
-          '${result.correctAnswers}/${result.totalQuestions}',
-          textAlign: TextAlign.center,
-          style: Theme.of(dialogContext).textTheme.headlineMedium,
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => QuizResultScreen(
+          result: result,
+          deckId: widget.deckId,
+          colorIndex: widget.colorIndex,
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              Navigator.pop(context);
-            },
-            child: const Text('OK'),
-          ),
-        ],
       ),
     );
   }
