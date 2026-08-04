@@ -7,6 +7,7 @@ import '../l10n/app_localizations.dart';
 import '../models/word.dart';
 import '../providers/deck_provider.dart';
 import '../providers/study_provider.dart';
+import '../services/tts_service.dart';
 import '../theme/app_theme.dart';
 
 /// Chiều rộng tối đa của nội dung, căn giữa trên màn hình rộng.
@@ -26,6 +27,9 @@ class StudyScreen extends StatefulWidget {
 
 class _StudyScreenState extends State<StudyScreen> {
   final PageController _pageController = PageController();
+
+  /// Bộ phát âm dùng chung cho cả phiên học.
+  final TtsService _ttsService = TtsService();
 
   /// Người dùng đã lật thẻ lần nào chưa — dùng để đổi dòng gợi ý thao tác.
   bool _hasFlipped = false;
@@ -56,6 +60,12 @@ class _StudyScreenState extends State<StudyScreen> {
   void _onPageChanged(int index) {
     final studyProvider = context.read<StudyProvider>();
     studyProvider.goToCard(index);
+
+    // Tự đọc từ ngay khi thẻ mới hiện ra.
+    final words = studyProvider.words;
+    if (index >= 0 && index < words.length) {
+      _ttsService.speak(words[index].term);
+    }
 
     if (!_finishNotified && studyProvider.isFinished()) {
       _finishNotified = true;
@@ -144,6 +154,7 @@ class _StudyScreenState extends State<StudyScreen> {
                                   if (_hasFlipped) return;
                                   setState(() => _hasFlipped = true);
                                 },
+                                onSpeak: () => _ttsService.speak(word.term),
                               ),
                             );
                           },
@@ -313,11 +324,13 @@ class _FlashcardWidget extends StatefulWidget {
     required this.word,
     required this.color,
     required this.onFlip,
+    required this.onSpeak,
   });
 
   final Word word;
   final Color color;
   final VoidCallback onFlip;
+  final VoidCallback onSpeak;
 
   @override
   State<_FlashcardWidget> createState() => _FlashcardWidgetState();
@@ -378,7 +391,11 @@ class _FlashcardWidgetState extends State<_FlashcardWidget>
                     transform: Matrix4.identity()..rotateY(math.pi),
                     child: _CardBack(word: widget.word, color: widget.color),
                   )
-                : _CardFront(word: widget.word, color: widget.color),
+                : _CardFront(
+                    word: widget.word,
+                    color: widget.color,
+                    onSpeak: widget.onSpeak,
+                  ),
           );
         },
       ),
@@ -388,16 +405,40 @@ class _FlashcardWidgetState extends State<_FlashcardWidget>
 
 /// Mặt trước: từ tiếng Anh trên nền màu của bộ từ.
 class _CardFront extends StatelessWidget {
-  const _CardFront({required this.word, required this.color});
+  const _CardFront({
+    required this.word,
+    required this.color,
+    required this.onSpeak,
+  });
 
   final Word word;
   final Color color;
+  final VoidCallback onSpeak;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final hasPhonetic = word.phonetic != null && word.phonetic!.isNotEmpty;
 
+    return Stack(
+      children: [
+        _buildCard(theme, hasPhonetic),
+        // Nút phát âm nằm trên nền màu đậm nên dùng icon trắng.
+        Positioned(
+          top: AppTheme.spacingS,
+          right: AppTheme.spacingS,
+          child: IconButton(
+            onPressed: onSpeak,
+            icon: const Icon(Icons.volume_up_rounded),
+            color: Colors.white,
+            iconSize: 28,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCard(ThemeData theme, bool hasPhonetic) {
     return _CardShell(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppTheme.radiusL + 4),
