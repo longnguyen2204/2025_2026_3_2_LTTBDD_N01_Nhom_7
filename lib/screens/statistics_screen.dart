@@ -148,25 +148,25 @@ class _SummaryGrid extends StatelessWidget {
       children: [
         _StatTile(
           icon: Icons.style_rounded,
-          value: '$deckCount',
+          value: deckCount,
           label: t.totalDecks,
           color: AppTheme.primary,
         ),
         _StatTile(
           icon: Icons.menu_book_rounded,
-          value: '$wordCount',
+          value: wordCount,
           label: t.totalWords,
           color: AppTheme.secondary,
         ),
         _StatTile(
           icon: Icons.check_circle_rounded,
-          value: '$learnedCount',
+          value: learnedCount,
           label: t.totalLearned,
           color: AppTheme.success,
         ),
         _StatTile(
           icon: Icons.quiz_rounded,
-          value: '$quizCount',
+          value: quizCount,
           label: t.quizzesCompleted,
           color: AppTheme.deckColorAt(3),
         ),
@@ -184,7 +184,7 @@ class _StatTile extends StatelessWidget {
   });
 
   final IconData icon;
-  final String value;
+  final int value;
   final String label;
   final Color color;
 
@@ -201,12 +201,19 @@ class _StatTile extends StatelessWidget {
           children: [
             Icon(icon, color: color),
             const SizedBox(height: AppTheme.spacingS),
-            Text(
-              value,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: color,
-              ),
+            TweenAnimationBuilder<int>(
+              tween: IntTween(begin: 0, end: value),
+              duration: const Duration(milliseconds: 900),
+              curve: Curves.easeOutCubic,
+              builder: (context, animatedValue, child) {
+                return Text(
+                  '$animatedValue',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
+                );
+              },
             ),
             Text(
               label,
