@@ -146,6 +146,12 @@
   "retakeQuiz": "Retake",
   "backToDeck": "Back to deck",
 
+  "historyTitle": "Quiz history",
+  "emptyHistory": "No quiz attempts yet",
+  "clearHistoryTitle": "Clear history",
+  "clearHistoryMessage": "Are you sure you want to clear all quiz history?",
+  "historyCleared": "History cleared",
+
   "statisticsTitle": "Learning progress",
   "totalDecks": "Total decks",
   "totalWords": "Total words",

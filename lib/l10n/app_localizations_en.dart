@@ -313,6 +313,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backToDeck => 'Back to deck';
 
   @override
+  String get historyTitle => 'Quiz history';
+
+  @override
+  String get emptyHistory => 'No quiz attempts yet';
+
+  @override
+  String get clearHistoryTitle => 'Clear history';
+
+  @override
+  String get clearHistoryMessage =>
+      'Are you sure you want to clear all quiz history?';
+
+  @override
+  String get historyCleared => 'History cleared';
+
+  @override
   String get statisticsTitle => 'Learning progress';
 
   @override

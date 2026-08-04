@@ -146,6 +146,12 @@
   "retakeQuiz": "Làm lại",
   "backToDeck": "Về bộ từ",
 
+  "historyTitle": "Lịch sử làm bài",
+  "emptyHistory": "Chưa có lượt làm bài nào",
+  "clearHistoryTitle": "Xóa lịch sử",
+  "clearHistoryMessage": "Bạn có chắc muốn xóa toàn bộ lịch sử làm bài?",
+  "historyCleared": "Đã xóa lịch sử",
+
   "statisticsTitle": "Thống kê tiến độ",
   "totalDecks": "Tổng số bộ từ",
   "totalWords": "Tổng số từ vựng",

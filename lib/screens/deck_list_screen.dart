@@ -7,6 +7,7 @@ import '../providers/deck_provider.dart';
 import '../providers/study_provider.dart';
 import '../theme/app_theme.dart';
 import 'deck_detail_screen.dart';
+import 'history_screen.dart';
 
 /// Chiều rộng tối đa của nội dung — trên màn hình rộng (tablet, web)
 /// danh sách nằm giữa thay vì kéo giãn hết cỡ.
@@ -34,6 +35,13 @@ class DeckListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(t.deckListTitle),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.history_rounded),
+            tooltip: t.historyTitle,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const HistoryScreen()),
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.bar_chart_rounded),
             tooltip: t.statistics,
@@ -330,9 +338,7 @@ class _DeckCard extends StatelessWidget {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: theme.textTheme.titleMedium
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        ?.copyWith(fontWeight: FontWeight.w600),
                                   ),
                                   const SizedBox(height: AppTheme.spacingS),
                                   _WordCountChip(

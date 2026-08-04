@@ -674,6 +674,36 @@ abstract class AppLocalizations {
   /// **'Về bộ từ'**
   String get backToDeck;
 
+  /// No description provided for @historyTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lịch sử làm bài'**
+  String get historyTitle;
+
+  /// No description provided for @emptyHistory.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có lượt làm bài nào'**
+  String get emptyHistory;
+
+  /// No description provided for @clearHistoryTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xóa lịch sử'**
+  String get clearHistoryTitle;
+
+  /// No description provided for @clearHistoryMessage.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn có chắc muốn xóa toàn bộ lịch sử làm bài?'**
+  String get clearHistoryMessage;
+
+  /// No description provided for @historyCleared.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã xóa lịch sử'**
+  String get historyCleared;
+
   /// No description provided for @statisticsTitle.
   ///
   /// In vi, this message translates to:

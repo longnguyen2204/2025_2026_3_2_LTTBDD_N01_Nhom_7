@@ -314,6 +314,22 @@ class AppLocalizationsVi extends AppLocalizations {
   String get backToDeck => 'Về bộ từ';
 
   @override
+  String get historyTitle => 'Lịch sử làm bài';
+
+  @override
+  String get emptyHistory => 'Chưa có lượt làm bài nào';
+
+  @override
+  String get clearHistoryTitle => 'Xóa lịch sử';
+
+  @override
+  String get clearHistoryMessage =>
+      'Bạn có chắc muốn xóa toàn bộ lịch sử làm bài?';
+
+  @override
+  String get historyCleared => 'Đã xóa lịch sử';
+
+  @override
   String get statisticsTitle => 'Thống kê tiến độ';
 
   @override
