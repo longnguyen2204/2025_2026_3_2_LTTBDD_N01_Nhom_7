@@ -356,10 +356,15 @@ class _DeckCard extends StatelessWidget {
                                   color: color.withValues(alpha: 0.12),
                                   borderRadius: BorderRadius.circular(14),
                                 ),
-                                child: Icon(
-                                  Icons.style_rounded,
-                                  color: color,
-                                  size: 24,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  deck.name.isEmpty
+                                      ? '?'
+                                      : deck.name[0].toUpperCase(),
+                                  style: theme.textTheme.titleLarge?.copyWith(
+                                    color: color,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
                             ),

@@ -387,10 +387,13 @@ class _DeckHeader extends StatelessWidget {
                         color: Colors.white.withValues(alpha: 0.18),
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      child: const Icon(
-                        Icons.style_rounded,
-                        color: Colors.white,
-                        size: 24,
+                      alignment: Alignment.center,
+                      child: Text(
+                        name.isEmpty ? '?' : name[0].toUpperCase(),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
@@ -792,8 +795,9 @@ class _WordTile extends StatelessWidget {
                                 word.phonetic!,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  fontStyle: FontStyle.italic,
+                                style: AppTheme.monoTextStyle(
+                                  fontSize:
+                                      theme.textTheme.bodySmall?.fontSize ?? 12,
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
                               ),
@@ -975,8 +979,8 @@ class _WordDetailSheet extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 word.phonetic!,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontStyle: FontStyle.italic,
+                style: AppTheme.monoTextStyle(
+                  fontSize: theme.textTheme.titleSmall?.fontSize ?? 14,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),

@@ -481,9 +481,9 @@ class _CardFront extends StatelessWidget {
           Text(
             word.phonetic!,
             textAlign: TextAlign.center,
-            style: theme.textTheme.titleMedium?.copyWith(
+            style: AppTheme.monoTextStyle(
+              fontSize: theme.textTheme.titleMedium?.fontSize ?? 16,
               color: Colors.white.withValues(alpha: 0.85),
-              fontStyle: FontStyle.italic,
             ),
           ),
         ],
