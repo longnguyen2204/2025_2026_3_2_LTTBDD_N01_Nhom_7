@@ -60,11 +60,16 @@ class AppTheme {
       colorScheme: colorScheme,
       scaffoldBackgroundColor: background,
 
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         centerTitle: true,
         elevation: 0,
         scrolledUnderElevation: 2,
-        titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+        foregroundColor: colorScheme.onSurface,
+        titleTextStyle: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: colorScheme.onSurface,
+        ),
       ),
 
       cardTheme: CardThemeData(
@@ -177,11 +182,16 @@ class AppTheme {
       colorScheme: colorScheme,
       scaffoldBackgroundColor: const Color(0xFF121212),
 
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         centerTitle: true,
         elevation: 0,
         scrolledUnderElevation: 2,
-        titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+        foregroundColor: colorScheme.onSurface,
+        titleTextStyle: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: colorScheme.onSurface,
+        ),
       ),
 
       cardTheme: CardThemeData(
