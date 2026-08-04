@@ -350,6 +350,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emptyStatistics => 'No data to display yet';
 
   @override
+  String get quizzesCompleted => 'Quizzes done';
+
+  @override
+  String get averageScore => 'Average score';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

@@ -159,6 +159,8 @@
   "overallProgress": "Tiến độ tổng thể",
   "progressByDeck": "Tiến độ theo từng bộ từ",
   "emptyStatistics": "Chưa có dữ liệu để thống kê",
+  "quizzesCompleted": "Bài đã làm",
+  "averageScore": "Điểm trung bình",
 
   "settingsTitle": "Cài đặt",
   "interfaceLanguage": "Ngôn ngữ giao diện",

@@ -159,6 +159,8 @@
   "overallProgress": "Overall progress",
   "progressByDeck": "Progress by deck",
   "emptyStatistics": "No data to display yet",
+  "quizzesCompleted": "Quizzes done",
+  "averageScore": "Average score",
 
   "settingsTitle": "Settings",
   "interfaceLanguage": "Interface language",

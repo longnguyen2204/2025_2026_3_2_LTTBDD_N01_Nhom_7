@@ -746,6 +746,18 @@ abstract class AppLocalizations {
   /// **'Chưa có dữ liệu để thống kê'**
   String get emptyStatistics;
 
+  /// No description provided for @quizzesCompleted.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bài đã làm'**
+  String get quizzesCompleted;
+
+  /// No description provided for @averageScore.
+  ///
+  /// In vi, this message translates to:
+  /// **'Điểm trung bình'**
+  String get averageScore;
+
   /// No description provided for @settingsTitle.
   ///
   /// In vi, this message translates to:

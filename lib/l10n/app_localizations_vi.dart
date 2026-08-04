@@ -351,6 +351,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get emptyStatistics => 'Chưa có dữ liệu để thống kê';
 
   @override
+  String get quizzesCompleted => 'Bài đã làm';
+
+  @override
+  String get averageScore => 'Điểm trung bình';
+
+  @override
   String get settingsTitle => 'Cài đặt';
 
   @override

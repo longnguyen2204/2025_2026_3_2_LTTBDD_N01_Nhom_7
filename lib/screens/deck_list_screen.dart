@@ -8,6 +8,7 @@ import '../providers/study_provider.dart';
 import '../theme/app_theme.dart';
 import 'deck_detail_screen.dart';
 import 'history_screen.dart';
+import 'statistics_screen.dart';
 
 /// Chiều rộng tối đa của nội dung — trên màn hình rộng (tablet, web)
 /// danh sách nằm giữa thay vì kéo giãn hết cỡ.
@@ -45,8 +46,9 @@ class DeckListScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.bar_chart_rounded),
             tooltip: t.statistics,
-            // TODO: điều hướng sang StatisticsScreen khi màn hình này hoàn tất.
-            onPressed: null,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const StatisticsScreen()),
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
