@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../models/deck.dart';
 import '../models/quiz_question.dart';
 import '../models/quiz_result.dart';
+import '../models/quiz_type.dart';
 import '../models/word.dart';
 
 /// Quản lý một bài trắc nghiệm: sinh câu hỏi ngẫu nhiên từ bộ từ vựng,
@@ -63,6 +64,7 @@ class QuizProvider extends ChangeNotifier {
           word: word,
           options: _buildOptions(word, deck.words),
           correctAnswer: word.meaning,
+          type: QuizType.multipleChoice,
         ),
       );
     }
