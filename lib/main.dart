@@ -11,6 +11,7 @@ import 'screens/deck_list_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const FlashcardApp());
 }
 
@@ -21,7 +22,7 @@ class FlashcardApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => DeckProvider()),
+        ChangeNotifierProvider(create: (_) => DeckProvider()..init()),
         ChangeNotifierProvider(create: (_) => StudyProvider()),
         ChangeNotifierProvider(create: (_) => QuizProvider()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
@@ -41,10 +42,30 @@ class FlashcardApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            home: const DeckListScreen(),
+            home: const _AppLoader(child: DeckListScreen()),
           );
         },
       ),
+    );
+  }
+}
+
+class _AppLoader extends StatelessWidget {
+  const _AppLoader({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<DeckProvider>(
+      builder: (context, provider, _) {
+        if (!provider.isLoaded) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return child;
+      },
     );
   }
 }
