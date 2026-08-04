@@ -76,6 +76,17 @@
   "wordUpdated": "Đã cập nhật từ vựng",
   "wordDeleted": "Đã xóa từ vựng",
 
+  "searchWords": "Tìm kiếm từ vựng",
+  "filterAll": "Tất cả",
+  "filterLearned": "Đã thuộc",
+  "filterNotLearned": "Chưa thuộc",
+  "filterFavorite": "Yêu thích",
+  "sortTermAsc": "A → Z",
+  "sortTermDesc": "Z → A",
+  "sortLearnedFirst": "Đã thuộc trước",
+  "sortUnlearnedFirst": "Chưa thuộc trước",
+  "noSearchResults": "Không tìm thấy từ nào phù hợp",
+
   "studyTitle": "Học flashcard",
   "emptyDeckForStudy": "Bộ từ chưa có từ vựng, vui lòng thêm từ trước khi học",
   "tapToFlip": "Chạm vào thẻ để xem nghĩa",

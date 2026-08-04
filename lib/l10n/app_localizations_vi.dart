@@ -163,6 +163,36 @@ class AppLocalizationsVi extends AppLocalizations {
   String get wordDeleted => 'Đã xóa từ vựng';
 
   @override
+  String get searchWords => 'Tìm kiếm từ vựng';
+
+  @override
+  String get filterAll => 'Tất cả';
+
+  @override
+  String get filterLearned => 'Đã thuộc';
+
+  @override
+  String get filterNotLearned => 'Chưa thuộc';
+
+  @override
+  String get filterFavorite => 'Yêu thích';
+
+  @override
+  String get sortTermAsc => 'A → Z';
+
+  @override
+  String get sortTermDesc => 'Z → A';
+
+  @override
+  String get sortLearnedFirst => 'Đã thuộc trước';
+
+  @override
+  String get sortUnlearnedFirst => 'Chưa thuộc trước';
+
+  @override
+  String get noSearchResults => 'Không tìm thấy từ nào phù hợp';
+
+  @override
   String get studyTitle => 'Học flashcard';
 
   @override

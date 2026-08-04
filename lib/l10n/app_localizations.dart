@@ -386,6 +386,66 @@ abstract class AppLocalizations {
   /// **'Đã xóa từ vựng'**
   String get wordDeleted;
 
+  /// No description provided for @searchWords.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tìm kiếm từ vựng'**
+  String get searchWords;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tất cả'**
+  String get filterAll;
+
+  /// No description provided for @filterLearned.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã thuộc'**
+  String get filterLearned;
+
+  /// No description provided for @filterNotLearned.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa thuộc'**
+  String get filterNotLearned;
+
+  /// No description provided for @filterFavorite.
+  ///
+  /// In vi, this message translates to:
+  /// **'Yêu thích'**
+  String get filterFavorite;
+
+  /// No description provided for @sortTermAsc.
+  ///
+  /// In vi, this message translates to:
+  /// **'A → Z'**
+  String get sortTermAsc;
+
+  /// No description provided for @sortTermDesc.
+  ///
+  /// In vi, this message translates to:
+  /// **'Z → A'**
+  String get sortTermDesc;
+
+  /// No description provided for @sortLearnedFirst.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã thuộc trước'**
+  String get sortLearnedFirst;
+
+  /// No description provided for @sortUnlearnedFirst.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa thuộc trước'**
+  String get sortUnlearnedFirst;
+
+  /// No description provided for @noSearchResults.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tìm thấy từ nào phù hợp'**
+  String get noSearchResults;
+
   /// No description provided for @studyTitle.
   ///
   /// In vi, this message translates to:

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
+import '../models/deck.dart';
 import '../models/word.dart';
 import '../providers/deck_provider.dart';
 import '../providers/study_provider.dart';
@@ -22,7 +23,7 @@ const int _minWordsForQuiz = 4;
 
 /// Màn hình chi tiết một bộ từ vựng: danh sách từ bên trong,
 /// lối vào phần Học và Kiểm tra (FR04, FR06).
-class DeckDetailScreen extends StatelessWidget {
+class DeckDetailScreen extends StatefulWidget {
   const DeckDetailScreen({
     super.key,
     required this.deckId,
@@ -37,9 +38,76 @@ class DeckDetailScreen extends StatelessWidget {
   final int colorIndex;
 
   @override
+  State<DeckDetailScreen> createState() => _DeckDetailScreenState();
+}
+
+class _DeckDetailScreenState extends State<DeckDetailScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  String _searchQuery = '';
+  WordFilter _filter = WordFilter.all;
+  WordSortOption _sort = WordSortOption.termAsc;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  /// Danh sách từ hiển thị: lọc theo từ khóa, rồi theo trạng thái,
+  /// rồi sắp xếp. Ba bước được ghép thủ công trên deck.words vì các hàm
+  /// tương ứng của provider mỗi hàm đều tự đọc lại toàn bộ danh sách gốc.
+  List<Word> _getDisplayWords(Deck deck) {
+    var result = List<Word>.from(deck.words);
+
+    final query = _searchQuery.trim().toLowerCase();
+    if (query.isNotEmpty) {
+      result = result
+          .where(
+            (w) =>
+                w.term.toLowerCase().contains(query) ||
+                w.meaning.toLowerCase().contains(query),
+          )
+          .toList();
+    }
+
+    switch (_filter) {
+      case WordFilter.all:
+        break;
+      case WordFilter.learned:
+        result = result.where((w) => w.isLearned).toList();
+      case WordFilter.notLearned:
+        result = result.where((w) => !w.isLearned).toList();
+      case WordFilter.favorite:
+        result = result.where((w) => w.isFavorite).toList();
+    }
+
+    switch (_sort) {
+      case WordSortOption.termAsc:
+        result.sort(
+          (a, b) => a.term.toLowerCase().compareTo(b.term.toLowerCase()),
+        );
+      case WordSortOption.termDesc:
+        result.sort(
+          (a, b) => b.term.toLowerCase().compareTo(a.term.toLowerCase()),
+        );
+      case WordSortOption.learnedFirst:
+        result.sort(
+          (a, b) => (b.isLearned ? 1 : 0).compareTo(a.isLearned ? 1 : 0),
+        );
+      case WordSortOption.unlearnedFirst:
+        result.sort(
+          (a, b) => (a.isLearned ? 1 : 0).compareTo(b.isLearned ? 1 : 0),
+        );
+    }
+
+    return result;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    final color = AppTheme.deckColorAt(colorIndex);
+    final color = AppTheme.deckColorAt(widget.colorIndex);
 
     return Scaffold(
       // Lắng nghe cả StudyProvider vì toggleLearned() sửa trạng thái đã thuộc
@@ -47,12 +115,13 @@ class DeckDetailScreen extends StatelessWidget {
       // tiến độ ở đầu màn hình không cập nhật sau khi học xong.
       body: Consumer2<DeckProvider, StudyProvider>(
         builder: (context, deckProvider, studyProvider, _) {
-          final deck = deckProvider.getDeckById(deckId);
+          final deck = deckProvider.getDeckById(widget.deckId);
 
           // Bộ từ vừa bị xóa ở màn hình khác.
           if (deck == null) return const _DeckNotFound();
 
           final words = deck.words;
+          final displayWords = _getDisplayWords(deck);
           final total = deck.wordCount();
           final learned = deck.learnedCount();
 
@@ -80,11 +149,37 @@ class DeckDetailScreen extends StatelessWidget {
                         side,
                         AppTheme.spacingS,
                       ),
-                      child: _ActionButtons(
-                        color: color,
-                        wordCount: total,
-                        deckId: deckId,
-                        colorIndex: colorIndex,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _ActionButtons(
+                            color: color,
+                            wordCount: total,
+                            deckId: widget.deckId,
+                            colorIndex: widget.colorIndex,
+                          ),
+                          if (words.isNotEmpty) ...[
+                            const SizedBox(height: AppTheme.spacingM),
+                            _SearchField(
+                              controller: _searchController,
+                              onChanged: (value) =>
+                                  setState(() => _searchQuery = value),
+                              onClear: () {
+                                _searchController.clear();
+                                setState(() => _searchQuery = '');
+                              },
+                            ),
+                            const SizedBox(height: AppTheme.spacingS),
+                            _FilterSortBar(
+                              filter: _filter,
+                              sort: _sort,
+                              onFilterChanged: (value) =>
+                                  setState(() => _filter = value),
+                              onSortChanged: (value) =>
+                                  setState(() => _sort = value),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
                   ),
@@ -92,6 +187,14 @@ class DeckDetailScreen extends StatelessWidget {
                     SliverFillRemaining(
                       hasScrollBody: false,
                       child: _EmptyWordList(message: t.emptyWordList),
+                    )
+                  else if (displayWords.isEmpty)
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: _EmptyWordList(
+                        message: t.noSearchResults,
+                        icon: Icons.search_off_rounded,
+                      ),
                     )
                   else
                     SliverPadding(
@@ -103,9 +206,9 @@ class DeckDetailScreen extends StatelessWidget {
                         AppTheme.spacingL * 4,
                       ),
                       sliver: SliverList.builder(
-                        itemCount: words.length,
+                        itemCount: displayWords.length,
                         itemBuilder: (context, index) {
-                          final word = words[index];
+                          final word = displayWords[index];
                           return Padding(
                             padding: const EdgeInsets.only(
                               bottom: AppTheme.spacingS + 4,
@@ -118,6 +221,9 @@ class DeckDetailScreen extends StatelessWidget {
                               onDelete: () => _onDeleteWord(context, word),
                               confirmDelete: () =>
                                   _confirmDeleteWord(context, word),
+                              onToggleFavorite: () => context
+                                  .read<DeckProvider>()
+                                  .toggleFavorite(widget.deckId, word.id),
                             ),
                           );
                         },
@@ -145,7 +251,7 @@ class DeckDetailScreen extends StatelessWidget {
     final word = await WordForm.show(context);
     if (word == null || !context.mounted) return;
 
-    context.read<DeckProvider>().addWord(deckId, word);
+    context.read<DeckProvider>().addWord(widget.deckId, word);
     _showSnackBar(context, t.wordAdded);
   }
 
@@ -155,7 +261,7 @@ class DeckDetailScreen extends StatelessWidget {
     final updated = await WordForm.show(context, initialWord: word);
     if (updated == null || !context.mounted) return;
 
-    context.read<DeckProvider>().updateWord(deckId, updated);
+    context.read<DeckProvider>().updateWord(widget.deckId, updated);
     _showSnackBar(context, t.wordUpdated);
   }
 
@@ -189,7 +295,7 @@ class DeckDetailScreen extends StatelessWidget {
   /// Xóa từ khỏi bộ và báo cho người dùng.
   void _onDeleteWord(BuildContext context, Word word) {
     final t = AppLocalizations.of(context)!;
-    context.read<DeckProvider>().deleteWord(deckId, word.id);
+    context.read<DeckProvider>().deleteWord(widget.deckId, word.id);
     _showSnackBar(context, t.wordDeleted);
   }
 
@@ -208,7 +314,7 @@ class DeckDetailScreen extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: _maxContentWidth),
       builder: (sheetContext) => _WordDetailSheet(
         word: word,
-        color: AppTheme.deckColorAt(colorIndex),
+        color: AppTheme.deckColorAt(widget.colorIndex),
       ),
     );
   }
@@ -408,6 +514,174 @@ class _ActionButtons extends StatelessWidget {
   }
 }
 
+/// Ô tìm kiếm từ vựng theo từ hoặc theo nghĩa.
+class _SearchField extends StatelessWidget {
+  const _SearchField({
+    required this.controller,
+    required this.onChanged,
+    required this.onClear,
+  });
+
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
+    return TextField(
+      controller: controller,
+      onChanged: onChanged,
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+        hintText: t.searchWords,
+        prefixIcon: const Icon(Icons.search),
+        suffixIcon: controller.text.isEmpty
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.clear),
+                tooltip: t.cancel,
+                onPressed: onClear,
+              ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppTheme.spacingM,
+          vertical: AppTheme.spacingS + 4,
+        ),
+      ),
+    );
+  }
+}
+
+/// Hàng chọn tiêu chí lọc và tiêu chí sắp xếp danh sách từ.
+class _FilterSortBar extends StatelessWidget {
+  const _FilterSortBar({
+    required this.filter,
+    required this.sort,
+    required this.onFilterChanged,
+    required this.onSortChanged,
+  });
+
+  final WordFilter filter;
+  final WordSortOption sort;
+  final ValueChanged<WordFilter> onFilterChanged;
+  final ValueChanged<WordSortOption> onSortChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
+    return Row(
+      children: [
+        Expanded(
+          child: _DropdownShell(
+            icon: Icons.filter_list_rounded,
+            child: DropdownButton<WordFilter>(
+              value: filter,
+              isExpanded: true,
+              underline: const SizedBox.shrink(),
+              onChanged: (value) {
+                if (value != null) onFilterChanged(value);
+              },
+              items: [
+                for (final option in WordFilter.values)
+                  DropdownMenuItem(
+                    value: option,
+                    child: Text(
+                      _filterLabel(t, option),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: AppTheme.spacingS),
+        Expanded(
+          child: _DropdownShell(
+            icon: Icons.sort_rounded,
+            child: DropdownButton<WordSortOption>(
+              value: sort,
+              isExpanded: true,
+              underline: const SizedBox.shrink(),
+              onChanged: (value) {
+                if (value != null) onSortChanged(value);
+              },
+              items: [
+                for (final option in WordSortOption.values)
+                  DropdownMenuItem(
+                    value: option,
+                    child: Text(
+                      _sortLabel(t, option),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Khung bo góc bọc quanh mỗi DropdownButton cho đồng bộ với ô tìm kiếm.
+class _DropdownShell extends StatelessWidget {
+  const _DropdownShell({required this.icon, required this.child});
+
+  final IconData icon;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingS + 4),
+      decoration: BoxDecoration(
+        color: theme.inputDecorationTheme.fillColor,
+        borderRadius: BorderRadius.circular(AppTheme.radiusM),
+        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: theme.colorScheme.onSurfaceVariant),
+          const SizedBox(width: 6),
+          Expanded(child: child),
+        ],
+      ),
+    );
+  }
+}
+
+String _filterLabel(AppLocalizations t, WordFilter filter) {
+  switch (filter) {
+    case WordFilter.all:
+      return t.filterAll;
+    case WordFilter.learned:
+      return t.filterLearned;
+    case WordFilter.notLearned:
+      return t.filterNotLearned;
+    case WordFilter.favorite:
+      return t.filterFavorite;
+  }
+}
+
+String _sortLabel(AppLocalizations t, WordSortOption sort) {
+  switch (sort) {
+    case WordSortOption.termAsc:
+      return t.sortTermAsc;
+    case WordSortOption.termDesc:
+      return t.sortTermDesc;
+    case WordSortOption.learnedFirst:
+      return t.sortLearnedFirst;
+    case WordSortOption.unlearnedFirst:
+      return t.sortUnlearnedFirst;
+  }
+}
+
 /// Một dòng từ vựng trong danh sách, vuốt sang trái để xóa.
 class _WordTile extends StatelessWidget {
   const _WordTile({
@@ -417,6 +691,7 @@ class _WordTile extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     required this.confirmDelete,
+    required this.onToggleFavorite,
   });
 
   final Word word;
@@ -425,6 +700,7 @@ class _WordTile extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final Future<bool> Function() confirmDelete;
+  final VoidCallback onToggleFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -516,6 +792,10 @@ class _WordTile extends StatelessWidget {
                 ),
                 const SizedBox(width: AppTheme.spacingS),
                 _LearnedIcon(isLearned: word.isLearned),
+                _FavoriteButton(
+                  isFavorite: word.isFavorite,
+                  onPressed: onToggleFavorite,
+                ),
                 _WordMenuButton(onEdit: onEdit, onDelete: onDelete),
               ],
             ),
@@ -541,6 +821,30 @@ class _LearnedIcon extends StatelessWidget {
       child: Icon(
         isLearned ? Icons.check_circle : Icons.radio_button_unchecked,
         color: isLearned ? AppTheme.success : Colors.grey.shade400,
+      ),
+    );
+  }
+}
+
+/// Nút đánh dấu / bỏ đánh dấu từ yêu thích.
+class _FavoriteButton extends StatelessWidget {
+  const _FavoriteButton({required this.isFavorite, required this.onPressed});
+
+  final bool isFavorite;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
+    return IconButton(
+      tooltip: t.filterFavorite,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+      onPressed: onPressed,
+      icon: Icon(
+        isFavorite ? Icons.favorite : Icons.favorite_border,
+        color: isFavorite ? AppTheme.danger : Colors.grey.shade400,
       ),
     );
   }
@@ -752,9 +1056,13 @@ class _LearnedBadge extends StatelessWidget {
 
 /// Trạng thái khi bộ từ chưa có từ vựng nào.
 class _EmptyWordList extends StatelessWidget {
-  const _EmptyWordList({required this.message});
+  const _EmptyWordList({
+    required this.message,
+    this.icon = Icons.menu_book_rounded,
+  });
 
   final String message;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -774,7 +1082,7 @@ class _EmptyWordList extends StatelessWidget {
                 color: AppTheme.primary.withValues(alpha: 0.07),
               ),
               child: Icon(
-                Icons.menu_book_rounded,
+                icon,
                 size: 64,
                 color: AppTheme.primary.withValues(alpha: 0.55),
               ),

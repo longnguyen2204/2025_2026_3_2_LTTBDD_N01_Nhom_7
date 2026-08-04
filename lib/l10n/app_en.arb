@@ -76,6 +76,17 @@
   "wordUpdated": "Word updated",
   "wordDeleted": "Word deleted",
 
+  "searchWords": "Search words",
+  "filterAll": "All",
+  "filterLearned": "Learned",
+  "filterNotLearned": "Not learned",
+  "filterFavorite": "Favorite",
+  "sortTermAsc": "A → Z",
+  "sortTermDesc": "Z → A",
+  "sortLearnedFirst": "Learned first",
+  "sortUnlearnedFirst": "Not learned first",
+  "noSearchResults": "No matching words found",
+
   "studyTitle": "Flashcard study",
   "emptyDeckForStudy": "This deck has no words. Please add words before studying.",
   "tapToFlip": "Tap the card to see its meaning",

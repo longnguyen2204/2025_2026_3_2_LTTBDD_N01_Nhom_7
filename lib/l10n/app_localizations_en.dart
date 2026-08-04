@@ -162,6 +162,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wordDeleted => 'Word deleted';
 
   @override
+  String get searchWords => 'Search words';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterLearned => 'Learned';
+
+  @override
+  String get filterNotLearned => 'Not learned';
+
+  @override
+  String get filterFavorite => 'Favorite';
+
+  @override
+  String get sortTermAsc => 'A → Z';
+
+  @override
+  String get sortTermDesc => 'Z → A';
+
+  @override
+  String get sortLearnedFirst => 'Learned first';
+
+  @override
+  String get sortUnlearnedFirst => 'Not learned first';
+
+  @override
+  String get noSearchResults => 'No matching words found';
+
+  @override
   String get studyTitle => 'Flashcard study';
 
   @override
