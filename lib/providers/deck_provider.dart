@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import '../models/deck.dart';
 import '../models/word.dart';
+import '../repositories/deck_repository.dart';
 
 /// Tiêu chí lọc danh sách từ vựng theo trạng thái học.
 enum WordFilter { all, learned, notLearned, favorite }
@@ -17,13 +20,50 @@ class DeckProvider extends ChangeNotifier {
   /// Bộ đếm dùng để sinh id duy nhất cho Deck và Word.
   int _idCounter = 0;
 
-  DeckProvider() {
-    _seedData();
+  final DeckRepository _repository = DeckRepository();
+
+  bool _isLoaded = false;
+  bool get isLoaded => _isLoaded;
+
+  DeckProvider();
+
+  Future<void> init() async {
+    final loaded = await _repository.loadDecks();
+    if (loaded.isEmpty) {
+      _seedData();
+      await _repository.saveDecks(_decks);
+    } else {
+      _decks
+        ..clear()
+        ..addAll(loaded);
+
+      var maxId = 0;
+      for (final deck in _decks) {
+        maxId = _maxSuffix(deck.id, maxId);
+        for (final word in deck.words) {
+          maxId = _maxSuffix(word.id, maxId);
+        }
+      }
+      _idCounter = maxId;
+    }
+    _isLoaded = true;
+    notifyListeners();
+  }
+
+  void _persist() {
+    unawaited(_repository.saveDecks(_decks));
   }
 
   String _generateId(String prefix) {
     _idCounter++;
     return '${prefix}_$_idCounter';
+  }
+
+  int _maxSuffix(String id, int current) {
+    final parts = id.split('_');
+    final suffix = int.tryParse(parts.last);
+    if (suffix == null) return current;
+    return suffix > current ? suffix : current;
   }
 
   // ---------- Quản lý bộ từ vựng ----------
@@ -43,6 +83,7 @@ class DeckProvider extends ChangeNotifier {
   void addDeck(String name) {
     _decks.add(Deck(id: _generateId('deck'), name: name));
     notifyListeners();
+    _persist();
   }
 
   /// Cập nhật thông tin một bộ từ vựng đã có.
@@ -51,12 +92,14 @@ class DeckProvider extends ChangeNotifier {
     if (index == -1) return;
     _decks[index] = deck;
     notifyListeners();
+    _persist();
   }
 
   /// Xóa một bộ từ vựng theo id.
   void deleteDeck(String id) {
     _decks.removeWhere((d) => d.id == id);
     notifyListeners();
+    _persist();
   }
 
   // ---------- Quản lý từ vựng trong bộ ----------
@@ -77,6 +120,7 @@ class DeckProvider extends ChangeNotifier {
       ),
     );
     notifyListeners();
+    _persist();
   }
 
   /// Cập nhật một từ vựng đã có trong bộ.
@@ -85,6 +129,7 @@ class DeckProvider extends ChangeNotifier {
     if (deck == null) return;
     deck.updateWord(word);
     notifyListeners();
+    _persist();
   }
 
   /// Xóa một từ vựng khỏi bộ.
@@ -93,6 +138,7 @@ class DeckProvider extends ChangeNotifier {
     if (deck == null) return;
     deck.removeWord(wordId);
     notifyListeners();
+    _persist();
   }
 
   // ---------- Tìm kiếm, lọc, sắp xếp ----------
@@ -167,6 +213,7 @@ class DeckProvider extends ChangeNotifier {
     for (final word in deck.words) {
       if (word.id == wordId) {
         word.toggleFavorite();
+        _persist();
         notifyListeners();
         return;
       }
