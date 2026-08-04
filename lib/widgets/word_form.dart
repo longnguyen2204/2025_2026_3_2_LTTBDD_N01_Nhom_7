@@ -80,6 +80,7 @@ class _WordFormState extends State<WordForm> {
         phonetic: _optionalText(_phoneticController),
         example: _optionalText(_exampleController),
         isLearned: original?.isLearned ?? false,
+        isFavorite: original?.isFavorite ?? false,
       ),
     );
   }

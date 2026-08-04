@@ -6,6 +6,7 @@ class Word {
   String? phonetic; // Phiên âm (tùy chọn)
   String? example; // Ví dụ minh họa (tùy chọn)
   bool isLearned; // Đã thuộc hay chưa
+  bool isFavorite; // Đã đánh dấu yêu thích hay chưa
 
   Word({
     required this.id,
@@ -14,10 +15,16 @@ class Word {
     this.phonetic,
     this.example,
     this.isLearned = false,
+    this.isFavorite = false,
   });
 
   /// Đảo trạng thái đã thuộc / chưa thuộc.
   void toggleLearned() {
     isLearned = !isLearned;
+  }
+
+  /// Đảo trạng thái yêu thích của từ.
+  void toggleFavorite() {
+    isFavorite = !isFavorite;
   }
 }

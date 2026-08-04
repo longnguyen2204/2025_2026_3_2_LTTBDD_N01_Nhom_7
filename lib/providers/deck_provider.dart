@@ -67,6 +67,7 @@ class DeckProvider extends ChangeNotifier {
         phonetic: word.phonetic,
         example: word.example,
         isLearned: word.isLearned,
+        isFavorite: word.isFavorite,
       ),
     );
     notifyListeners();
