@@ -25,7 +25,7 @@ class FlashcardApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => DeckProvider()..init()),
         ChangeNotifierProvider(create: (_) => StudyProvider()),
-        ChangeNotifierProvider(create: (_) => QuizProvider()),
+        ChangeNotifierProvider(create: (_) => QuizProvider()..loadHistory()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()..loadTheme()),
       ],
