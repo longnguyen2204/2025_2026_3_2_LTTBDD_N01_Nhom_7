@@ -87,19 +87,22 @@ class DeckListScreen extends StatelessWidget {
                 final deck = decks[index];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: _cardGap),
-                  child: _DeckCard(
-                    deck: deck,
-                    color: AppTheme.deckColorAt(index),
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => DeckDetailScreen(
-                          deckId: deck.id,
-                          colorIndex: index,
+                  child: _StaggeredItem(
+                    index: index,
+                    child: _DeckCard(
+                      deck: deck,
+                      color: AppTheme.deckColorAt(index),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => DeckDetailScreen(
+                            deckId: deck.id,
+                            colorIndex: index,
+                          ),
                         ),
                       ),
+                      onEdit: () => _onEditDeck(context, deck),
+                      onDelete: () => _onDeleteDeck(context, deck),
                     ),
-                    onEdit: () => _onEditDeck(context, deck),
-                    onDelete: () => _onDeleteDeck(context, deck),
                   ),
                 );
               },
@@ -187,6 +190,32 @@ class DeckListScreen extends StatelessWidget {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+class _StaggeredItem extends StatelessWidget {
+  const _StaggeredItem({required this.index, required this.child});
+
+  final int index;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: Duration(milliseconds: 350 + index.clamp(0, 8) * 60),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, (1 - value) * 24),
+            child: child,
+          ),
+        );
+      },
+      child: child,
+    );
   }
 }
 
