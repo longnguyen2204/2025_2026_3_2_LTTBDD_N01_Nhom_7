@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Bảng màu và cấu hình giao diện dùng chung cho toàn ứng dụng.
 /// Tập trung tại một nơi để mọi màn hình có phong cách thống nhất.
@@ -47,6 +48,18 @@ class AppTheme {
   static const double radiusM = 16.0;
   static const double radiusL = 24.0;
 
+  static TextStyle monoTextStyle({
+    double fontSize = 14,
+    FontWeight fontWeight = FontWeight.w500,
+    Color? color,
+  }) {
+    return GoogleFonts.ibmPlexMono(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+    );
+  }
+
   // ---------- Cấu hình ThemeData ----------
 
   static ThemeData get light {
@@ -55,7 +68,7 @@ class AppTheme {
       brightness: Brightness.light,
     ).copyWith(secondary: secondary, error: danger);
 
-    return ThemeData(
+    final base = ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: background,
@@ -65,10 +78,12 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 2,
         foregroundColor: colorScheme.onSurface,
-        titleTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: colorScheme.onSurface,
+        titleTextStyle: GoogleFonts.beVietnamPro(
+          textStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: colorScheme.onSurface,
+          ),
         ),
       ),
 
@@ -169,6 +184,13 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
       ),
     );
+
+    return base.copyWith(
+      textTheme: GoogleFonts.beVietnamProTextTheme(base.textTheme),
+      primaryTextTheme: GoogleFonts.beVietnamProTextTheme(
+        base.primaryTextTheme,
+      ),
+    );
   }
 
   static ThemeData get dark {
@@ -177,7 +199,7 @@ class AppTheme {
       brightness: Brightness.dark,
     ).copyWith(secondary: secondary, error: danger);
 
-    return ThemeData(
+    final base = ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: const Color(0xFF121212),
@@ -187,10 +209,12 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 2,
         foregroundColor: colorScheme.onSurface,
-        titleTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: colorScheme.onSurface,
+        titleTextStyle: GoogleFonts.beVietnamPro(
+          textStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: colorScheme.onSurface,
+          ),
         ),
       ),
 
@@ -291,6 +315,14 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
       ),
     );
+
+    return base.copyWith(
+      textTheme: GoogleFonts.beVietnamProTextTheme(base.textTheme),
+      primaryTextTheme: GoogleFonts.beVietnamProTextTheme(
+        base.primaryTextTheme,
+      ),
+    );
   }
 }
+
 //aaaaaaaaaaaa
