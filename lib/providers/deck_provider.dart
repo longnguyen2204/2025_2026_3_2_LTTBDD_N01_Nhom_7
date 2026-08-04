@@ -3,6 +3,12 @@ import 'package:flutter/foundation.dart';
 import '../models/deck.dart';
 import '../models/word.dart';
 
+/// Tiêu chí lọc danh sách từ vựng theo trạng thái học.
+enum WordFilter { all, learned, notLearned, favorite }
+
+/// Tiêu chí sắp xếp danh sách từ vựng.
+enum WordSortOption { termAsc, termDesc, learnedFirst, unlearnedFirst }
+
 /// Quản lý danh sách bộ từ vựng và các từ vựng bên trong mỗi bộ.
 /// Thuộc tầng State/Logic trong kiến trúc phân lớp.
 class DeckProvider extends ChangeNotifier {
@@ -87,6 +93,84 @@ class DeckProvider extends ChangeNotifier {
     if (deck == null) return;
     deck.removeWord(wordId);
     notifyListeners();
+  }
+
+  // ---------- Tìm kiếm, lọc, sắp xếp ----------
+
+  /// Tìm các từ trong bộ có từ hoặc nghĩa khớp với [query]
+  /// (không phân biệt hoa thường). Trả về danh sách rỗng nếu
+  /// bộ từ không tồn tại hoặc [query] rỗng thì trả về toàn bộ từ.
+  List<Word> searchWords(String deckId, String query) {
+    final deck = getDeckById(deckId);
+    if (deck == null) return [];
+    if (query.trim().isEmpty) return List.unmodifiable(deck.words);
+
+    final lowerQuery = query.toLowerCase().trim();
+    return deck.words
+        .where(
+          (w) =>
+              w.term.toLowerCase().contains(lowerQuery) ||
+              w.meaning.toLowerCase().contains(lowerQuery),
+        )
+        .toList();
+  }
+
+  /// Lọc danh sách từ trong bộ theo [filter].
+  List<Word> filterWords(String deckId, WordFilter filter) {
+    final deck = getDeckById(deckId);
+    if (deck == null) return [];
+
+    switch (filter) {
+      case WordFilter.all:
+        return List.unmodifiable(deck.words);
+      case WordFilter.learned:
+        return deck.words.where((w) => w.isLearned).toList();
+      case WordFilter.notLearned:
+        return deck.words.where((w) => !w.isLearned).toList();
+      case WordFilter.favorite:
+        return deck.words.where((w) => w.isFavorite).toList();
+    }
+  }
+
+  /// Sắp xếp danh sách từ trong bộ theo [option].
+  /// Trả về bản sao đã sắp xếp, không thay đổi thứ tự gốc trong [Deck].
+  List<Word> sortWords(String deckId, WordSortOption option) {
+    final deck = getDeckById(deckId);
+    if (deck == null) return [];
+
+    final sorted = List<Word>.from(deck.words);
+    switch (option) {
+      case WordSortOption.termAsc:
+        sorted.sort(
+          (a, b) => a.term.toLowerCase().compareTo(b.term.toLowerCase()),
+        );
+      case WordSortOption.termDesc:
+        sorted.sort(
+          (a, b) => b.term.toLowerCase().compareTo(a.term.toLowerCase()),
+        );
+      case WordSortOption.learnedFirst:
+        sorted.sort(
+          (a, b) => (b.isLearned ? 1 : 0).compareTo(a.isLearned ? 1 : 0),
+        );
+      case WordSortOption.unlearnedFirst:
+        sorted.sort(
+          (a, b) => (a.isLearned ? 1 : 0).compareTo(b.isLearned ? 1 : 0),
+        );
+    }
+    return sorted;
+  }
+
+  /// Đảo trạng thái yêu thích của một từ trong bộ.
+  void toggleFavorite(String deckId, String wordId) {
+    final deck = getDeckById(deckId);
+    if (deck == null) return;
+    for (final word in deck.words) {
+      if (word.id == wordId) {
+        word.toggleFavorite();
+        notifyListeners();
+        return;
+      }
+    }
   }
 
   // ---------- Thống kê ----------
