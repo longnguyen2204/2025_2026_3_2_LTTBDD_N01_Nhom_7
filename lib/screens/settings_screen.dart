@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../l10n/app_localizations.dart';
+import '../providers/locale_provider.dart';
+import '../providers/theme_provider.dart';
+import '../theme/app_theme.dart';
+
+const double _maxContentWidth = 600;
+
+/// Màn hình cài đặt: đổi ngôn ngữ giao diện và bật/tắt chế độ tối
+/// (FR12, FR21).
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      appBar: AppBar(title: Text(t.settingsTitle)),
+      body: Consumer2<LocaleProvider, ThemeProvider>(
+        builder: (context, localeProvider, themeProvider, _) {
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+              child: ListView(
+                padding: const EdgeInsets.all(AppTheme.spacingM),
+                children: [
+                  _SectionTitle(title: t.interfaceLanguage),
+                  const SizedBox(height: AppTheme.spacingS),
+                  Card(
+                    child: RadioGroup<Locale>(
+                      groupValue: localeProvider.currentLocale,
+                      onChanged: (locale) {
+                        if (locale != null) {
+                          localeProvider.changeLocale(locale);
+                        }
+                      },
+                      child: Column(
+                        children: [
+                          RadioListTile<Locale>(
+                            value: const Locale('vi'),
+                            title: Text(t.vietnamese),
+                          ),
+                          RadioListTile<Locale>(
+                            value: const Locale('en'),
+                            title: Text(t.english),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppTheme.spacingL),
+                  _SectionTitle(title: t.appearance),
+                  const SizedBox(height: AppTheme.spacingS),
+                  Card(
+                    child: SwitchListTile(
+                      value: themeProvider.isDarkMode,
+                      onChanged: (_) => themeProvider.toggleTheme(),
+                      title: Text(t.darkMode),
+                      secondary: Icon(
+                        themeProvider.isDarkMode
+                            ? Icons.dark_mode_rounded
+                            : Icons.light_mode_rounded,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingS),
+      child: Text(
+        title,
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}

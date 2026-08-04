@@ -363,6 +363,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get interfaceLanguage => 'Ngôn ngữ giao diện';
 
   @override
+  String get appearance => 'Giao diện';
+
+  @override
+  String get darkMode => 'Chế độ tối';
+
+  @override
   String get aboutTitle => 'Thông tin nhóm';
 
   @override

@@ -362,6 +362,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get interfaceLanguage => 'Interface language';
 
   @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get darkMode => 'Dark mode';
+
+  @override
   String get aboutTitle => 'Group information';
 
   @override

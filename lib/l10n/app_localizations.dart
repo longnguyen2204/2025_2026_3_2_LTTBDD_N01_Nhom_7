@@ -770,6 +770,18 @@ abstract class AppLocalizations {
   /// **'Ngôn ngữ giao diện'**
   String get interfaceLanguage;
 
+  /// No description provided for @appearance.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giao diện'**
+  String get appearance;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chế độ tối'**
+  String get darkMode;
+
   /// No description provided for @aboutTitle.
   ///
   /// In vi, this message translates to:

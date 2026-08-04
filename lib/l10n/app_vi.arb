@@ -164,6 +164,8 @@
 
   "settingsTitle": "Cài đặt",
   "interfaceLanguage": "Ngôn ngữ giao diện",
+  "appearance": "Giao diện",
+  "darkMode": "Chế độ tối",
 
   "aboutTitle": "Thông tin nhóm",
   "projectName": "Ứng dụng học từ vựng Anh – Việt bằng Flashcard",

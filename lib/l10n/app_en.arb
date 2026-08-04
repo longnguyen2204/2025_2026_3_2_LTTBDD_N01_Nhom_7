@@ -164,6 +164,8 @@
 
   "settingsTitle": "Settings",
   "interfaceLanguage": "Interface language",
+  "appearance": "Appearance",
+  "darkMode": "Dark mode",
 
   "aboutTitle": "Group information",
   "projectName": "English – Vietnamese Flashcard Vocabulary App",
