@@ -36,8 +36,13 @@ class DeckProvider extends ChangeNotifier {
 
     final loaded = await _repository.loadDecks(profileId);
     if (loaded.isEmpty) {
-      _seedData();
-      await _repository.saveDecks(profileId, _decks);
+      if (profileId == 'profile_1') {
+        _decks.clear();
+        _seedData();
+        await _repository.saveDecks(profileId, _decks);
+      } else {
+        _decks.clear();
+      }
     } else {
       _decks
         ..clear()

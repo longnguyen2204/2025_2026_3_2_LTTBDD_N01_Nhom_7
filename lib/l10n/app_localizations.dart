@@ -620,6 +620,36 @@ abstract class AppLocalizations {
   /// **'Vui lòng chọn một đáp án'**
   String get selectAnswerFirst;
 
+  /// No description provided for @comboLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Combo x{count}'**
+  String comboLabel(int count);
+
+  /// No description provided for @feedbackCorrect1.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tuyệt vời!'**
+  String get feedbackCorrect1;
+
+  /// No description provided for @feedbackCorrect2.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chính xác!'**
+  String get feedbackCorrect2;
+
+  /// No description provided for @feedbackCorrect3.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giỏi lắm!'**
+  String get feedbackCorrect3;
+
+  /// No description provided for @feedbackIncorrect.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa đúng, thử lại nhé'**
+  String get feedbackIncorrect;
+
   /// No description provided for @quizResultTitle.
   ///
   /// In vi, this message translates to:
@@ -757,6 +787,54 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Điểm trung bình'**
   String get averageScore;
+
+  /// No description provided for @profilesTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hồ sơ'**
+  String get profilesTitle;
+
+  /// No description provided for @addProfile.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thêm hồ sơ'**
+  String get addProfile;
+
+  /// No description provided for @profileName.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên hồ sơ'**
+  String get profileName;
+
+  /// No description provided for @profileNameEmpty.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên hồ sơ không được để trống'**
+  String get profileNameEmpty;
+
+  /// No description provided for @deleteProfileTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xóa hồ sơ'**
+  String get deleteProfileTitle;
+
+  /// No description provided for @deleteProfileMessage.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn có chắc muốn xóa hồ sơ \"{name}\"? Toàn bộ bộ từ và lịch sử của hồ sơ này sẽ mất.'**
+  String deleteProfileMessage(String name);
+
+  /// No description provided for @cannotDeleteLastProfile.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể xóa hồ sơ cuối cùng'**
+  String get cannotDeleteLastProfile;
+
+  /// No description provided for @activeProfileLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang dùng'**
+  String get activeProfileLabel;
 
   /// No description provided for @settingsTitle.
   ///

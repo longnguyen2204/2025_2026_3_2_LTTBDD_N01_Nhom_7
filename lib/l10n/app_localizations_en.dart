@@ -284,6 +284,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectAnswerFirst => 'Please select an answer';
 
   @override
+  String comboLabel(int count) {
+    return 'Combo x$count';
+  }
+
+  @override
+  String get feedbackCorrect1 => 'Awesome!';
+
+  @override
+  String get feedbackCorrect2 => 'Correct!';
+
+  @override
+  String get feedbackCorrect3 => 'Well done!';
+
+  @override
+  String get feedbackIncorrect => 'Not quite, try again';
+
+  @override
   String get quizResultTitle => 'Quiz result';
 
   @override
@@ -354,6 +371,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get averageScore => 'Average score';
+
+  @override
+  String get profilesTitle => 'Profiles';
+
+  @override
+  String get addProfile => 'Add profile';
+
+  @override
+  String get profileName => 'Profile name';
+
+  @override
+  String get profileNameEmpty => 'Profile name cannot be empty';
+
+  @override
+  String get deleteProfileTitle => 'Delete profile';
+
+  @override
+  String deleteProfileMessage(String name) {
+    return 'Are you sure you want to delete \"$name\"? All decks and history for this profile will be lost.';
+  }
+
+  @override
+  String get cannotDeleteLastProfile => 'Cannot delete the last profile';
+
+  @override
+  String get activeProfileLabel => 'Active';
 
   @override
   String get settingsTitle => 'Settings';

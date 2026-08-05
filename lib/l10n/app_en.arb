@@ -129,6 +129,14 @@
   "nextQuestion": "Next question",
   "submitQuiz": "Submit",
   "selectAnswerFirst": "Please select an answer",
+  "comboLabel": "Combo x{count}",
+  "@comboLabel": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "feedbackCorrect1": "Awesome!",
+  "feedbackCorrect2": "Correct!",
+  "feedbackCorrect3": "Well done!",
+  "feedbackIncorrect": "Not quite, try again",
 
   "quizResultTitle": "Quiz result",
   "yourScore": "Your score",
@@ -161,6 +169,18 @@
   "emptyStatistics": "No data to display yet",
   "quizzesCompleted": "Quizzes done",
   "averageScore": "Average score",
+
+  "profilesTitle": "Profiles",
+  "addProfile": "Add profile",
+  "profileName": "Profile name",
+  "profileNameEmpty": "Profile name cannot be empty",
+  "deleteProfileTitle": "Delete profile",
+  "deleteProfileMessage": "Are you sure you want to delete \"{name}\"? All decks and history for this profile will be lost.",
+  "@deleteProfileMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "cannotDeleteLastProfile": "Cannot delete the last profile",
+  "activeProfileLabel": "Active",
 
   "settingsTitle": "Settings",
   "interfaceLanguage": "Interface language",

@@ -129,6 +129,14 @@
   "nextQuestion": "Câu tiếp theo",
   "submitQuiz": "Nộp bài",
   "selectAnswerFirst": "Vui lòng chọn một đáp án",
+  "comboLabel": "Combo x{count}",
+  "@comboLabel": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "feedbackCorrect1": "Tuyệt vời!",
+  "feedbackCorrect2": "Chính xác!",
+  "feedbackCorrect3": "Giỏi lắm!",
+  "feedbackIncorrect": "Chưa đúng, thử lại nhé",
 
   "quizResultTitle": "Kết quả kiểm tra",
   "yourScore": "Điểm của bạn",
@@ -161,6 +169,18 @@
   "emptyStatistics": "Chưa có dữ liệu để thống kê",
   "quizzesCompleted": "Bài đã làm",
   "averageScore": "Điểm trung bình",
+
+  "profilesTitle": "Hồ sơ",
+  "addProfile": "Thêm hồ sơ",
+  "profileName": "Tên hồ sơ",
+  "profileNameEmpty": "Tên hồ sơ không được để trống",
+  "deleteProfileTitle": "Xóa hồ sơ",
+  "deleteProfileMessage": "Bạn có chắc muốn xóa hồ sơ \"{name}\"? Toàn bộ bộ từ và lịch sử của hồ sơ này sẽ mất.",
+  "@deleteProfileMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "cannotDeleteLastProfile": "Không thể xóa hồ sơ cuối cùng",
+  "activeProfileLabel": "Đang dùng",
 
   "settingsTitle": "Cài đặt",
   "interfaceLanguage": "Ngôn ngữ giao diện",

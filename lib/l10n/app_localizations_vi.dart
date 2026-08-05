@@ -285,6 +285,23 @@ class AppLocalizationsVi extends AppLocalizations {
   String get selectAnswerFirst => 'Vui lòng chọn một đáp án';
 
   @override
+  String comboLabel(int count) {
+    return 'Combo x$count';
+  }
+
+  @override
+  String get feedbackCorrect1 => 'Tuyệt vời!';
+
+  @override
+  String get feedbackCorrect2 => 'Chính xác!';
+
+  @override
+  String get feedbackCorrect3 => 'Giỏi lắm!';
+
+  @override
+  String get feedbackIncorrect => 'Chưa đúng, thử lại nhé';
+
+  @override
   String get quizResultTitle => 'Kết quả kiểm tra';
 
   @override
@@ -355,6 +372,32 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get averageScore => 'Điểm trung bình';
+
+  @override
+  String get profilesTitle => 'Hồ sơ';
+
+  @override
+  String get addProfile => 'Thêm hồ sơ';
+
+  @override
+  String get profileName => 'Tên hồ sơ';
+
+  @override
+  String get profileNameEmpty => 'Tên hồ sơ không được để trống';
+
+  @override
+  String get deleteProfileTitle => 'Xóa hồ sơ';
+
+  @override
+  String deleteProfileMessage(String name) {
+    return 'Bạn có chắc muốn xóa hồ sơ \"$name\"? Toàn bộ bộ từ và lịch sử của hồ sơ này sẽ mất.';
+  }
+
+  @override
+  String get cannotDeleteLastProfile => 'Không thể xóa hồ sơ cuối cùng';
+
+  @override
+  String get activeProfileLabel => 'Đang dùng';
 
   @override
   String get settingsTitle => 'Cài đặt';
