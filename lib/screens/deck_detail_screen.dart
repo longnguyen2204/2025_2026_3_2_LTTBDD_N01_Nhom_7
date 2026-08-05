@@ -641,55 +641,53 @@ class _FilterSortBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
 
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(
-          child: _DropdownShell(
-            icon: Icons.filter_list_rounded,
-            child: DropdownButton<WordFilter>(
-              value: filter,
-              isExpanded: true,
-              underline: const SizedBox.shrink(),
-              onChanged: (value) {
-                if (value != null) onFilterChanged(value);
-              },
-              items: [
-                for (final option in WordFilter.values)
-                  DropdownMenuItem(
-                    value: option,
-                    child: Text(
-                      _filterLabel(t, option),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-              ],
-            ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SegmentedButton<WordFilter>(
+            segments: [
+              ButtonSegment(value: WordFilter.all, label: Text(t.filterAll)),
+              ButtonSegment(
+                value: WordFilter.learned,
+                label: Text(t.filterLearned),
+              ),
+              ButtonSegment(
+                value: WordFilter.notLearned,
+                label: Text(t.filterNotLearned),
+              ),
+              ButtonSegment(
+                value: WordFilter.favorite,
+                label: Text(t.filterFavorite),
+              ),
+            ],
+            selected: {filter},
+            onSelectionChanged: (selection) => onFilterChanged(selection.first),
+            showSelectedIcon: false,
           ),
         ),
-        const SizedBox(width: AppTheme.spacingS),
-        Expanded(
-          child: _DropdownShell(
-            icon: Icons.sort_rounded,
-            child: DropdownButton<WordSortOption>(
-              value: sort,
-              isExpanded: true,
-              underline: const SizedBox.shrink(),
-              onChanged: (value) {
-                if (value != null) onSortChanged(value);
-              },
-              items: [
-                for (final option in WordSortOption.values)
-                  DropdownMenuItem(
-                    value: option,
-                    child: Text(
-                      _sortLabel(t, option),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+        const SizedBox(height: AppTheme.spacingS),
+        _DropdownShell(
+          icon: Icons.sort_rounded,
+          child: DropdownButton<WordSortOption>(
+            value: sort,
+            isExpanded: true,
+            underline: const SizedBox.shrink(),
+            onChanged: (value) {
+              if (value != null) onSortChanged(value);
+            },
+            items: [
+              for (final option in WordSortOption.values)
+                DropdownMenuItem(
+                  value: option,
+                  child: Text(
+                    _sortLabel(t, option),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
         ),
       ],
@@ -723,19 +721,6 @@ class _DropdownShell extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-String _filterLabel(AppLocalizations t, WordFilter filter) {
-  switch (filter) {
-    case WordFilter.all:
-      return t.filterAll;
-    case WordFilter.learned:
-      return t.filterLearned;
-    case WordFilter.notLearned:
-      return t.filterNotLearned;
-    case WordFilter.favorite:
-      return t.filterFavorite;
   }
 }
 
