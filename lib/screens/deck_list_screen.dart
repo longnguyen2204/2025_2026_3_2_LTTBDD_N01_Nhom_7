@@ -16,13 +16,16 @@ import 'statistics_screen.dart';
 const double _maxContentWidth = 600;
 
 /// Khoảng cách giữa hai thẻ bộ từ liền nhau.
-const double _cardGap = 14;
+const double _cardGap = 16;
 
 /// Padding bên trong mỗi thẻ bộ từ.
 const double _cardPadding = 18;
 
-/// Độ rộng dải màu nhận diện ở cạnh trái mỗi thẻ.
-const double _stripeWidth = 6;
+/// Kích thước của tab nhô lên ở góc trên mỗi thẻ, và phần tab đè
+/// lên viền trên của thân thẻ.
+const double _tabWidth = 44;
+const double _tabHeight = 28;
+const double _tabOverlap = 14;
 
 /// Màn hình chính của ứng dụng: hiển thị danh sách bộ từ vựng,
 /// cho phép tạo mới, sửa tên và xóa bộ từ (FR01, FR02, FR03).
@@ -309,118 +312,152 @@ class _DeckCard extends StatelessWidget {
     // nên không thể lệch nhau.
     final progress = total == 0 ? 0.0 : learned / total;
 
-    return DecoratedBox(
-      // Bóng nhẹ để thẻ nổi khỏi nền mà không bị nặng nề.
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: _tabOverlap),
+          child: DecoratedBox(
+            // Bóng nhẹ để thẻ nổi khỏi nền mà không bị nặng nề.
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppTheme.radiusM),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withValues(alpha: 0.10),
+                  blurRadius: 14,
+                  offset: const Offset(0, 5),
+                ),
+                theme.brightness == Brightness.dark
+                    ? BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.03),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      )
+                    : BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+              ],
+            ),
+            child: Card(
+              child: InkWell(
+                onTap: onTap,
+                splashColor: color.withValues(alpha: 0.12),
+                highlightColor: color.withValues(alpha: 0.05),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    _cardPadding,
+                    _cardPadding + 6,
+                    _cardPadding,
+                    _cardPadding,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  deck.name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: AppTheme.spacingS),
+                                _WordCountChip(
+                                  label: t.wordCountLabel(total),
+                                  color: color,
+                                ),
+                              ],
+                            ),
+                          ),
+                          _DeckMenuButton(onEdit: onEdit, onDelete: onDelete),
+                        ],
+                      ),
+                      const SizedBox(height: AppTheme.spacingM),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(999),
+                        child: LinearProgressIndicator(
+                          value: progress,
+                          // Khi chưa thuộc từ nào, nền thanh nhạt hơn hẳn
+                          // để không bị nhìn nhầm thành đã hoàn thành.
+                          backgroundColor: progress == 0
+                              ? theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.12,
+                                )
+                              : color.withValues(alpha: 0.16),
+                          valueColor: AlwaysStoppedAnimation<Color>(color),
+                        ),
+                      ),
+                      const SizedBox(height: AppTheme.spacingS),
+                      Text(
+                        t.learnedProgress(learned, total),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 0,
+          left: 20,
+          child: Hero(
+            tag: 'deck_icon_${deck.id}',
+            child: _DeckTab(
+              color: color,
+              letter: deck.name.isEmpty ? '?' : deck.name[0].toUpperCase(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DeckTab extends StatelessWidget {
+  const _DeckTab({required this.color, required this.letter});
+
+  final Color color;
+  final String letter;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: _tabWidth,
+      height: _tabHeight,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppTheme.radiusM),
+        color: color,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
         boxShadow: [
           BoxShadow(
-            color: color.withValues(alpha: 0.10),
-            blurRadius: 14,
-            offset: const Offset(0, 5),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
+            color: color.withValues(alpha: 0.35),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Card(
-        child: InkWell(
-          onTap: onTap,
-          splashColor: color.withValues(alpha: 0.12),
-          highlightColor: color.withValues(alpha: 0.05),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Dải màu nhận diện bộ từ ở cạnh trái.
-                Container(width: _stripeWidth, color: color),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(_cardPadding),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Điểm nhấn thị giác mang màu của bộ từ.
-                            Hero(
-                              tag: 'deck_icon_${deck.id}',
-                              child: Container(
-                                width: 46,
-                                height: 46,
-                                decoration: BoxDecoration(
-                                  color: color.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  deck.name.isEmpty
-                                      ? '?'
-                                      : deck.name[0].toUpperCase(),
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    color: color,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: AppTheme.spacingM),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    deck.name,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: theme.textTheme.titleMedium
-                                        ?.copyWith(fontWeight: FontWeight.w600),
-                                  ),
-                                  const SizedBox(height: AppTheme.spacingS),
-                                  _WordCountChip(
-                                    label: t.wordCountLabel(total),
-                                    color: color,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            _DeckMenuButton(onEdit: onEdit, onDelete: onDelete),
-                          ],
-                        ),
-                        const SizedBox(height: AppTheme.spacingM),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(999),
-                          child: LinearProgressIndicator(
-                            value: progress,
-                            // Khi chưa thuộc từ nào, nền thanh nhạt hơn hẳn
-                            // để không bị nhìn nhầm thành đã hoàn thành.
-                            backgroundColor: progress == 0
-                                ? theme.colorScheme.onSurface.withValues(
-                                    alpha: 0.12,
-                                  )
-                                : color.withValues(alpha: 0.16),
-                            valueColor: AlwaysStoppedAnimation<Color>(color),
-                          ),
-                        ),
-                        const SizedBox(height: AppTheme.spacingS),
-                        Text(
-                          t.learnedProgress(learned, total),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+      alignment: Alignment.center,
+      child: Text(
+        letter,
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
