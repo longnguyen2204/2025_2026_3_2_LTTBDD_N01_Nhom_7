@@ -133,7 +133,7 @@ class _DeckListScreenState extends State<DeckListScreen> {
                           ),
                         ),
                       ),
-                      onEdit: () => _onEditDeck(context, deck),
+                      onEdit: () => _onEditDeck(context, deck, index),
                       onDelete: () => _onDeleteDeck(context, deck),
                     ),
                   ),
@@ -165,19 +165,28 @@ class _DeckListScreenState extends State<DeckListScreen> {
 
   Future<void> _onCreateDeck(BuildContext context) async {
     final t = AppLocalizations.of(context)!;
-    final name = await _showDeckNameDialog(context, title: t.createDeck);
+    final name = await _showDeckNameDialog(
+      context,
+      title: t.createDeck,
+      colorIndex: context.read<DeckProvider>().getDecks().length,
+    );
     if (name == null || !context.mounted) return;
 
     context.read<DeckProvider>().addDeck(name);
     _showSnackBar(context, t.deckCreated);
   }
 
-  Future<void> _onEditDeck(BuildContext context, Deck deck) async {
+  Future<void> _onEditDeck(
+    BuildContext context,
+    Deck deck,
+    int colorIndex,
+  ) async {
     final t = AppLocalizations.of(context)!;
     final name = await _showDeckNameDialog(
       context,
       title: t.editDeck,
       initialName: deck.name,
+      colorIndex: colorIndex,
     );
     if (name == null || !context.mounted) return;
 
@@ -220,12 +229,16 @@ class _DeckListScreenState extends State<DeckListScreen> {
   Future<String?> _showDeckNameDialog(
     BuildContext context, {
     required String title,
+    required int colorIndex,
     String? initialName,
   }) {
     return showDialog<String>(
       context: context,
-      builder: (dialogContext) =>
-          _DeckNameDialog(title: title, initialName: initialName),
+      builder: (dialogContext) => _DeckNameDialog(
+        title: title,
+        initialName: initialName,
+        colorIndex: colorIndex,
+      ),
     );
   }
 
@@ -583,9 +596,14 @@ enum _DeckAction { edit, delete }
 
 /// Hộp thoại nhập / sửa tên bộ từ, có kiểm tra tên rỗng.
 class _DeckNameDialog extends StatefulWidget {
-  const _DeckNameDialog({required this.title, this.initialName});
+  const _DeckNameDialog({
+    required this.title,
+    required this.colorIndex,
+    this.initialName,
+  });
 
   final String title;
+  final int colorIndex;
   final String? initialName;
 
   @override
@@ -616,27 +634,50 @@ class _DeckNameDialogState extends State<_DeckNameDialog> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    final color = AppTheme.deckColorAt(widget.colorIndex);
 
     return AlertDialog(
-      title: Text(widget.title),
+      title: Row(
+        children: [
+          Icon(Icons.auto_awesome_rounded, color: color),
+          const SizedBox(width: AppTheme.spacingS),
+          Expanded(child: Text(widget.title)),
+        ],
+      ),
       content: Form(
         key: _formKey,
-        child: TextFormField(
-          controller: _controller,
-          autofocus: true,
-          textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
-          decoration: InputDecoration(
-            labelText: t.deckName,
-            hintText: t.deckNameHint,
-          ),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return t.deckNameEmpty;
-            }
-            return null;
-          },
-          onFieldSubmitted: (_) => _submit(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                final name = _controller.text.trim();
+                return _DeckTab(
+                  color: color,
+                  letter: name.isEmpty ? '?' : name[0].toUpperCase(),
+                );
+              },
+            ),
+            const SizedBox(height: AppTheme.spacingM),
+            TextFormField(
+              controller: _controller,
+              autofocus: true,
+              textCapitalization: TextCapitalization.sentences,
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(
+                labelText: t.deckName,
+                hintText: t.deckNameHint,
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return t.deckNameEmpty;
+                }
+                return null;
+              },
+              onFieldSubmitted: (_) => _submit(),
+            ),
+          ],
         ),
       ),
       actions: [
