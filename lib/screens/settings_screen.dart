@@ -41,11 +41,17 @@ class SettingsScreen extends StatelessWidget {
                         children: [
                           RadioListTile<Locale>(
                             value: const Locale('vi'),
-                            title: Text(t.vietnamese),
+                            title: _LanguageTitle(
+                              flag: '🇻🇳',
+                              label: t.vietnamese,
+                            ),
                           ),
                           RadioListTile<Locale>(
                             value: const Locale('en'),
-                            title: Text(t.english),
+                            title: _LanguageTitle(
+                              flag: '🇺🇸',
+                              label: t.english,
+                            ),
                           ),
                         ],
                       ),
@@ -72,6 +78,24 @@ class SettingsScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _LanguageTitle extends StatelessWidget {
+  const _LanguageTitle({required this.flag, required this.label});
+
+  final String flag;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(flag, style: const TextStyle(fontSize: 28)),
+        const SizedBox(width: AppTheme.spacingM),
+        Expanded(child: Text(label)),
+      ],
     );
   }
 }
