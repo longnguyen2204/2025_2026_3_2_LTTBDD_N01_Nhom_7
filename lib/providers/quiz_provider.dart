@@ -28,6 +28,7 @@ class QuizProvider extends ChangeNotifier {
 
   final HistoryRepository _historyRepository = HistoryRepository();
   List<QuizHistory> _history = [];
+  String? _profileId;
 
   List<QuizQuestion> get questions => List.unmodifiable(_questions);
   int get currentIndex => _currentIndex;
@@ -174,8 +175,9 @@ class QuizProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadHistory() async {
-    _history = await _historyRepository.loadHistory();
+  Future<void> setProfile(String profileId) async {
+    _profileId = profileId;
+    _history = await _historyRepository.loadHistory(profileId);
     notifyListeners();
   }
 
@@ -196,12 +198,16 @@ class QuizProvider extends ChangeNotifier {
     );
     _history = [entry, ..._history];
     notifyListeners();
-    await _historyRepository.saveHistory(_history);
+    if (_profileId != null) {
+      await _historyRepository.saveHistory(_profileId!, _history);
+    }
   }
 
   Future<void> clearHistory() async {
     _history = [];
     notifyListeners();
-    await _historyRepository.saveHistory(_history);
+    if (_profileId != null) {
+      await _historyRepository.saveHistory(_profileId!, _history);
+    }
   }
 }

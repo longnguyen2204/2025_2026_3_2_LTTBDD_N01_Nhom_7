@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/deck_provider.dart';
 import 'providers/locale_provider.dart';
+import 'providers/profile_provider.dart';
 import 'providers/quiz_provider.dart';
 import 'providers/study_provider.dart';
 import 'providers/theme_provider.dart';
@@ -23,9 +24,10 @@ class FlashcardApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => DeckProvider()..init()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()..init()),
+        ChangeNotifierProvider(create: (_) => DeckProvider()),
         ChangeNotifierProvider(create: (_) => StudyProvider()),
-        ChangeNotifierProvider(create: (_) => QuizProvider()..loadHistory()),
+        ChangeNotifierProvider(create: (_) => QuizProvider()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()..loadTheme()),
       ],
@@ -56,21 +58,47 @@ class FlashcardApp extends StatelessWidget {
   }
 }
 
-class _AppLoader extends StatelessWidget {
+class _AppLoader extends StatefulWidget {
   const _AppLoader({required this.child});
 
   final Widget child;
 
   @override
+  State<_AppLoader> createState() => _AppLoaderState();
+}
+
+class _AppLoaderState extends State<_AppLoader> {
+  String? _linkedProfileId;
+
+  @override
   Widget build(BuildContext context) {
-    return Consumer<DeckProvider>(
-      builder: (context, provider, _) {
-        if (!provider.isLoaded) {
+    return Consumer<ProfileProvider>(
+      builder: (context, profileProvider, _) {
+        if (!profileProvider.isLoaded) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
-        return child;
+
+        final profileId = profileProvider.activeProfile!.id;
+        if (_linkedProfileId != profileId) {
+          _linkedProfileId = profileId;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<DeckProvider>().setProfile(profileId);
+            context.read<QuizProvider>().setProfile(profileId);
+          });
+        }
+
+        return Consumer2<DeckProvider, QuizProvider>(
+          builder: (context, deckProvider, quizProvider, _) {
+            if (!deckProvider.isLoaded) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+            return widget.child;
+          },
+        );
       },
     );
   }

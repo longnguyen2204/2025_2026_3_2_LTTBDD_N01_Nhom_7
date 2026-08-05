@@ -6,11 +6,11 @@ import '../models/deck.dart';
 import '../models/word.dart';
 
 class DeckRepository {
-  static const String _storageKey = 'decks_data';
+  String _storageKey(String profileId) => 'decks_data_$profileId';
 
-  Future<List<Deck>> loadDecks() async {
+  Future<List<Deck>> loadDecks(String profileId) async {
     final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString(_storageKey);
+    final jsonString = prefs.getString(_storageKey(profileId));
     if (jsonString == null || jsonString.isEmpty) return [];
 
     try {
@@ -23,10 +23,10 @@ class DeckRepository {
     }
   }
 
-  Future<void> saveDecks(List<Deck> decks) async {
+  Future<void> saveDecks(String profileId, List<Deck> decks) async {
     final prefs = await SharedPreferences.getInstance();
     final jsonList = decks.map(_deckToJson).toList();
-    await prefs.setString(_storageKey, jsonEncode(jsonList));
+    await prefs.setString(_storageKey(profileId), jsonEncode(jsonList));
   }
 
   Map<String, dynamic> _deckToJson(Deck deck) {

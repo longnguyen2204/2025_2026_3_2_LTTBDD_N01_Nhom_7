@@ -6,11 +6,11 @@ import '../models/quiz_history.dart';
 import '../models/quiz_type.dart';
 
 class HistoryRepository {
-  static const String _storageKey = 'quiz_history_data';
+  String _storageKey(String profileId) => 'quiz_history_data_$profileId';
 
-  Future<List<QuizHistory>> loadHistory() async {
+  Future<List<QuizHistory>> loadHistory(String profileId) async {
     final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString(_storageKey);
+    final jsonString = prefs.getString(_storageKey(profileId));
     if (jsonString == null || jsonString.isEmpty) return [];
 
     try {
@@ -25,10 +25,10 @@ class HistoryRepository {
     }
   }
 
-  Future<void> saveHistory(List<QuizHistory> history) async {
+  Future<void> saveHistory(String profileId, List<QuizHistory> history) async {
     final prefs = await SharedPreferences.getInstance();
     final jsonList = history.map(_historyToJson).toList();
-    await prefs.setString(_storageKey, jsonEncode(jsonList));
+    await prefs.setString(_storageKey(profileId), jsonEncode(jsonList));
   }
 
   Map<String, dynamic> _historyToJson(QuizHistory item) {

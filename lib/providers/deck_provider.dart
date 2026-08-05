@@ -25,13 +25,19 @@ class DeckProvider extends ChangeNotifier {
   bool _isLoaded = false;
   bool get isLoaded => _isLoaded;
 
+  String? _profileId;
+
   DeckProvider();
 
-  Future<void> init() async {
-    final loaded = await _repository.loadDecks();
+  Future<void> setProfile(String profileId) async {
+    _profileId = profileId;
+    _isLoaded = false;
+    notifyListeners();
+
+    final loaded = await _repository.loadDecks(profileId);
     if (loaded.isEmpty) {
       _seedData();
-      await _repository.saveDecks(_decks);
+      await _repository.saveDecks(profileId, _decks);
     } else {
       _decks
         ..clear()
@@ -51,7 +57,8 @@ class DeckProvider extends ChangeNotifier {
   }
 
   void _persist() {
-    unawaited(_repository.saveDecks(_decks));
+    if (_profileId == null) return;
+    unawaited(_repository.saveDecks(_profileId!, _decks));
   }
 
   String _generateId(String prefix) {
