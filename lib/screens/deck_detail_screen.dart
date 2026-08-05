@@ -261,7 +261,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
         },
       ),
       floatingActionButton: AnimatedSize(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOutCubic,
         child: _isFabExtended
             ? FloatingActionButton.extended(
                 onPressed: () => _onAddWord(context),
