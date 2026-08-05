@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/locale_provider.dart';
 import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
+import 'about_screen.dart';
 
 const double _maxContentWidth = 600;
 
@@ -69,6 +70,19 @@ class SettingsScreen extends StatelessWidget {
                         themeProvider.isDarkMode
                             ? Icons.dark_mode_rounded
                             : Icons.light_mode_rounded,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppTheme.spacingL),
+                  Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.info_outline_rounded),
+                      title: Text(t.about),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const AboutScreen(),
+                        ),
                       ),
                     ),
                   ),
