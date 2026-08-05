@@ -202,7 +202,7 @@ class AppTheme {
     final base = ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: const Color(0xFF121212),
+      scaffoldBackgroundColor: const Color(0xFF13121C),
 
       appBarTheme: AppBarTheme(
         centerTitle: true,
@@ -219,7 +219,9 @@ class AppTheme {
       ),
 
       cardTheme: CardThemeData(
-        elevation: 0,
+        elevation: 3,
+        shadowColor: primary.withValues(alpha: 0.45),
+        surfaceTintColor: primary,
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
@@ -277,12 +279,16 @@ class AppTheme {
       ),
 
       dialogTheme: DialogThemeData(
+        elevation: 4,
+        surfaceTintColor: primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusL),
         ),
       ),
 
       bottomSheetTheme: const BottomSheetThemeData(
+        elevation: 4,
+        surfaceTintColor: primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(radiusL)),
         ),
