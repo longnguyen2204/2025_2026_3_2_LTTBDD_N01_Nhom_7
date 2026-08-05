@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
@@ -21,6 +22,11 @@ const double _headerHeight = 190;
 
 /// Số từ tối thiểu để có thể tạo một bài kiểm tra.
 const int _minWordsForQuiz = 4;
+
+/// Kích thước tab nhô lên mang chữ cái đầu của bộ từ, khớp với tab
+/// trên thẻ ở màn hình danh sách để hiệu ứng Hero không đổi hình dạng.
+const double _tabWidth = 44;
+const double _tabHeight = 28;
 
 /// Màn hình chi tiết một bộ từ vựng: danh sách từ bên trong,
 /// lối vào phần Học và Kiểm tra (FR04, FR06).
@@ -44,14 +50,30 @@ class DeckDetailScreen extends StatefulWidget {
 
 class _DeckDetailScreenState extends State<DeckDetailScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   String _searchQuery = '';
   WordFilter _filter = WordFilter.all;
   WordSortOption _sort = WordSortOption.termAsc;
+  bool _isFabExtended = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      final direction = _scrollController.position.userScrollDirection;
+      if (direction == ScrollDirection.reverse && _isFabExtended) {
+        setState(() => _isFabExtended = false);
+      } else if (direction == ScrollDirection.forward && !_isFabExtended) {
+        setState(() => _isFabExtended = true);
+      }
+    });
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -135,6 +157,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               );
 
               return CustomScrollView(
+                controller: _scrollController,
                 slivers: [
                   _DeckHeader(
                     deckId: widget.deckId,
@@ -237,10 +260,19 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: t.addWord,
-        onPressed: () => _onAddWord(context),
-        child: const Icon(Icons.add),
+      floatingActionButton: AnimatedSize(
+        duration: const Duration(milliseconds: 200),
+        child: _isFabExtended
+            ? FloatingActionButton.extended(
+                onPressed: () => _onAddWord(context),
+                icon: const Icon(Icons.add),
+                label: Text(t.addWord),
+              )
+            : FloatingActionButton(
+                tooltip: t.addWord,
+                onPressed: () => _onAddWord(context),
+                child: const Icon(Icons.add),
+              ),
       ),
     );
   }
@@ -381,16 +413,26 @@ class _DeckHeader extends StatelessWidget {
                   Hero(
                     tag: 'deck_icon_$deckId',
                     child: Container(
-                      width: 46,
-                      height: 46,
+                      width: _tabWidth,
+                      height: _tabHeight,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.18),
-                        borderRadius: BorderRadius.circular(14),
+                        color: Color.lerp(color, Colors.black, 0.45)!,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.25),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       alignment: Alignment.center,
                       child: Text(
                         name.isEmpty ? '?' : name[0].toUpperCase(),
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
                         ),

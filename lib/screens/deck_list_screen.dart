@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
@@ -29,8 +30,36 @@ const double _tabOverlap = 14;
 
 /// Màn hình chính của ứng dụng: hiển thị danh sách bộ từ vựng,
 /// cho phép tạo mới, sửa tên và xóa bộ từ (FR01, FR02, FR03).
-class DeckListScreen extends StatelessWidget {
+class DeckListScreen extends StatefulWidget {
   const DeckListScreen({super.key});
+
+  @override
+  State<DeckListScreen> createState() => _DeckListScreenState();
+}
+
+class _DeckListScreenState extends State<DeckListScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  bool _isFabExtended = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      final direction = _scrollController.position.userScrollDirection;
+      if (direction == ScrollDirection.reverse && _isFabExtended) {
+        setState(() => _isFabExtended = false);
+      } else if (direction == ScrollDirection.forward && !_isFabExtended) {
+        setState(() => _isFabExtended = true);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +107,7 @@ class DeckListScreen extends StatelessWidget {
 
           return _CenteredContent(
             child: ListView.builder(
+              controller: _scrollController,
               padding: const EdgeInsets.fromLTRB(
                 AppTheme.spacingM,
                 AppTheme.spacingM,
@@ -113,10 +143,19 @@ class DeckListScreen extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: t.createDeck,
-        onPressed: () => _onCreateDeck(context),
-        child: const Icon(Icons.add),
+      floatingActionButton: AnimatedSize(
+        duration: const Duration(milliseconds: 200),
+        child: _isFabExtended
+            ? FloatingActionButton.extended(
+                onPressed: () => _onCreateDeck(context),
+                icon: const Icon(Icons.add),
+                label: Text(t.createDeck),
+              )
+            : FloatingActionButton(
+                tooltip: t.createDeck,
+                onPressed: () => _onCreateDeck(context),
+                child: const Icon(Icons.add),
+              ),
       ),
     );
   }
