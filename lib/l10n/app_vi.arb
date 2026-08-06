@@ -137,6 +137,9 @@
   "feedbackCorrect2": "Chính xác!",
   "feedbackCorrect3": "Giỏi lắm!",
   "feedbackIncorrect": "Chưa đúng, thử lại nhé",
+  "exitQuizTitle": "Thoát bài kiểm tra?",
+  "exitQuizMessage": "Tiến trình làm bài hiện tại sẽ không được lưu nếu bạn thoát bây giờ.",
+  "exitQuizConfirm": "Thoát",
 
   "quizResultTitle": "Kết quả kiểm tra",
   "yourScore": "Điểm của bạn",

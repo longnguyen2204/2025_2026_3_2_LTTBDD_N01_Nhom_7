@@ -302,6 +302,16 @@ class AppLocalizationsVi extends AppLocalizations {
   String get feedbackIncorrect => 'Chưa đúng, thử lại nhé';
 
   @override
+  String get exitQuizTitle => 'Thoát bài kiểm tra?';
+
+  @override
+  String get exitQuizMessage =>
+      'Tiến trình làm bài hiện tại sẽ không được lưu nếu bạn thoát bây giờ.';
+
+  @override
+  String get exitQuizConfirm => 'Thoát';
+
+  @override
   String get quizResultTitle => 'Kết quả kiểm tra';
 
   @override

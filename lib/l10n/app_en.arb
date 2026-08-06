@@ -137,6 +137,9 @@
   "feedbackCorrect2": "Correct!",
   "feedbackCorrect3": "Well done!",
   "feedbackIncorrect": "Not quite, try again",
+  "exitQuizTitle": "Exit quiz?",
+  "exitQuizMessage": "Your current progress will not be saved if you exit now.",
+  "exitQuizConfirm": "Exit",
 
   "quizResultTitle": "Quiz result",
   "yourScore": "Your score",

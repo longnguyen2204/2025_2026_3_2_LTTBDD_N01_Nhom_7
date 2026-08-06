@@ -129,6 +129,28 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
       );
   }
 
+  Future<bool?> _confirmExit(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.exitQuizTitle),
+        content: Text(t.exitQuizMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(t.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: AppTheme.danger),
+            child: Text(t.exitQuizConfirm),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _onNext(QuizProvider quizProvider) {
     _typingController.clear();
     setState(() => _checkedQuestionId = null);
@@ -159,15 +181,41 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
     final color = AppTheme.deckColorAt(widget.colorIndex);
     final deck = context.read<DeckProvider>().getDeckById(widget.deckId);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(t.quizTitle)),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: _maxContentWidth),
-            child: deck == null
-                ? _QuizMessage(message: t.emptyDeckForStudy)
-                : _buildQuizBody(deck, color),
+    return PopScope(
+      canPop: deck == null,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldExit = await _confirmExit(context);
+        if (shouldExit == true && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(t.quizTitle),
+          leading: IconButton(
+            icon: const BackButtonIcon(),
+            tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+            onPressed: () async {
+              if (deck == null) {
+                Navigator.of(context).pop();
+                return;
+              }
+              final shouldExit = await _confirmExit(context);
+              if (shouldExit == true && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+        ),
+        body: SafeArea(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+              child: deck == null
+                  ? _QuizMessage(message: t.emptyDeckForStudy)
+                  : _buildQuizBody(deck, color),
+            ),
           ),
         ),
       ),
@@ -648,7 +696,7 @@ class _QuizMessage extends StatelessWidget {
             ),
             const SizedBox(height: AppTheme.spacingL),
             OutlinedButton(
-              onPressed: () => Navigator.of(context).maybePop(),
+              onPressed: () => Navigator.of(context).pop(),
               child: Text(t.back),
             ),
           ],

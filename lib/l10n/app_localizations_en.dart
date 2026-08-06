@@ -301,6 +301,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feedbackIncorrect => 'Not quite, try again';
 
   @override
+  String get exitQuizTitle => 'Exit quiz?';
+
+  @override
+  String get exitQuizMessage =>
+      'Your current progress will not be saved if you exit now.';
+
+  @override
+  String get exitQuizConfirm => 'Exit';
+
+  @override
   String get quizResultTitle => 'Quiz result';
 
   @override

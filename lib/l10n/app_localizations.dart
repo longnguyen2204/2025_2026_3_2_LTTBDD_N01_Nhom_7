@@ -650,6 +650,24 @@ abstract class AppLocalizations {
   /// **'Chưa đúng, thử lại nhé'**
   String get feedbackIncorrect;
 
+  /// No description provided for @exitQuizTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thoát bài kiểm tra?'**
+  String get exitQuizTitle;
+
+  /// No description provided for @exitQuizMessage.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiến trình làm bài hiện tại sẽ không được lưu nếu bạn thoát bây giờ.'**
+  String get exitQuizMessage;
+
+  /// No description provided for @exitQuizConfirm.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thoát'**
+  String get exitQuizConfirm;
+
   /// No description provided for @quizResultTitle.
   ///
   /// In vi, this message translates to:
