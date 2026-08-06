@@ -12,8 +12,6 @@ import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'statistics_screen.dart';
 
-/// Chiều rộng tối đa của nội dung — trên màn hình rộng (tablet, web)
-/// danh sách nằm giữa thay vì kéo giãn hết cỡ.
 const double _maxContentWidth = 600;
 
 /// Khoảng cách giữa hai thẻ bộ từ liền nhau.
@@ -29,7 +27,7 @@ const double _tabHeight = 28;
 const double _tabOverlap = 14;
 
 /// Màn hình chính của ứng dụng: hiển thị danh sách bộ từ vựng,
-/// cho phép tạo mới, sửa tên và xóa bộ từ (FR01, FR02, FR03).
+
 class DeckListScreen extends StatefulWidget {
   const DeckListScreen({super.key});
 
@@ -92,56 +90,68 @@ class _DeckListScreenState extends State<DeckListScreen> {
           ),
         ],
       ),
-      // Lắng nghe cả StudyProvider vì toggleLearned() sửa trạng thái đã thuộc
-      // của Word mà không thông báo qua DeckProvider — thiếu nó thì tiến độ
-      // trên các thẻ không cập nhật sau khi học xong.
-      body: Consumer2<DeckProvider, StudyProvider>(
-        builder: (context, deckProvider, studyProvider, _) {
-          final decks = deckProvider.getDecks();
 
-          if (decks.isEmpty) {
-            return _CenteredContent(
-              child: _EmptyDeckList(message: t.emptyDeckList),
-            );
-          }
-
-          return _CenteredContent(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.fromLTRB(
-                AppTheme.spacingM,
-                AppTheme.spacingM,
-                AppTheme.spacingM,
-                // Chừa chỗ cho FloatingActionButton ở cuối danh sách.
-                AppTheme.spacingL * 4,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _BackgroundPatternPainter(
+                dotColor: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.035),
+                glowColor: AppTheme.primary,
               ),
-              itemCount: decks.length,
-              itemBuilder: (context, index) {
-                final deck = decks[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: _cardGap),
-                  child: _StaggeredItem(
-                    index: index,
-                    child: _DeckCard(
-                      deck: deck,
-                      color: AppTheme.deckColorAt(index),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => DeckDetailScreen(
-                            deckId: deck.id,
-                            colorIndex: index,
+            ),
+          ),
+          Consumer2<DeckProvider, StudyProvider>(
+            builder: (context, deckProvider, studyProvider, _) {
+              final decks = deckProvider.getDecks();
+
+              if (decks.isEmpty) {
+                return _CenteredContent(
+                  child: _EmptyDeckList(message: t.emptyDeckList),
+                );
+              }
+
+              return _CenteredContent(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  padding: const EdgeInsets.fromLTRB(
+                    AppTheme.spacingM,
+                    AppTheme.spacingM,
+                    AppTheme.spacingM,
+                    // Chừa chỗ cho FloatingActionButton ở cuối danh sách.
+                    AppTheme.spacingL * 4,
+                  ),
+                  itemCount: decks.length,
+                  itemBuilder: (context, index) {
+                    final deck = decks[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: _cardGap),
+                      child: _StaggeredItem(
+                        index: index,
+                        child: _DeckCard(
+                          deck: deck,
+                          color: AppTheme.deckColorAt(index),
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => DeckDetailScreen(
+                                deckId: deck.id,
+                                colorIndex: index,
+                              ),
+                            ),
                           ),
+                          onEdit: () => _onEditDeck(context, deck, index),
+                          onDelete: () => _onDeleteDeck(context, deck),
                         ),
                       ),
-                      onEdit: () => _onEditDeck(context, deck, index),
-                      onDelete: () => _onDeleteDeck(context, deck),
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        },
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: AnimatedSize(
         duration: const Duration(milliseconds: 350),
@@ -225,7 +235,6 @@ class _DeckListScreenState extends State<DeckListScreen> {
     _showSnackBar(context, t.deckDeleted);
   }
 
-  /// Mở hộp thoại nhập tên bộ từ. Trả về tên đã nhập, hoặc null nếu hủy.
   Future<String?> _showDeckNameDialog(
     BuildContext context, {
     required String title,
@@ -371,7 +380,6 @@ class _DeckCard extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: _tabOverlap),
           child: DecoratedBox(
-            // Bóng nhẹ để thẻ nổi khỏi nền mà không bị nặng nề.
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppTheme.radiusM),
               boxShadow: [
@@ -688,5 +696,42 @@ class _DeckNameDialogState extends State<_DeckNameDialog> {
         FilledButton(onPressed: _submit, child: Text(t.save)),
       ],
     );
+  }
+}
+
+class _BackgroundPatternPainter extends CustomPainter {
+  const _BackgroundPatternPainter({
+    required this.dotColor,
+    required this.glowColor,
+  });
+
+  final Color dotColor;
+  final Color glowColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final glowCenter = Offset(size.width * 0.82, -30);
+    final glowPaint = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          glowColor.withValues(alpha: 0.22),
+          glowColor.withValues(alpha: 0),
+        ],
+      ).createShader(Rect.fromCircle(center: glowCenter, radius: 240));
+    canvas.drawCircle(glowCenter, 240, glowPaint);
+
+    final dotPaint = Paint()..color = dotColor;
+    const spacing = 26.0;
+    for (double y = 8; y < size.height; y += spacing) {
+      for (double x = 8; x < size.width; x += spacing) {
+        canvas.drawCircle(Offset(x, y), 1.0, dotPaint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _BackgroundPatternPainter oldDelegate) {
+    return oldDelegate.dotColor != dotColor ||
+        oldDelegate.glowColor != glowColor;
   }
 }
